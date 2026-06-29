@@ -50,7 +50,7 @@ export function RecurringFields({ value, onChange }: RecurringFieldsProps) {
       <div className="flex items-center justify-between gap-3">
         <label htmlFor={switchId} className="inline-flex cursor-pointer items-center gap-2">
           <ArrowsClockwise size={16} aria-hidden="true" className="text-content-muted" />
-          <span className="text-sm font-medium text-content">{t('makeRecurring')}</span>
+          <span className="text-content text-sm font-medium">{t('makeRecurring')}</span>
         </label>
         <Switch
           id={switchId}
@@ -61,7 +61,7 @@ export function RecurringFields({ value, onChange }: RecurringFieldsProps) {
       </div>
 
       {enabled ? (
-        <div className="grid gap-3 rounded-xl border border-hairline bg-surface-2/60 p-3 sm:grid-cols-3">
+        <div className="border-hairline bg-surface-2/60 grid gap-3 rounded-xl border p-3 sm:grid-cols-3">
           <label className="space-y-1.5">
             <span className="eyebrow block">{t('frequency')}</span>
             <Select

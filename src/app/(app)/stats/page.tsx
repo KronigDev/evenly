@@ -111,7 +111,7 @@ export default function StatsPage() {
             <DropdownMenu>
               <DropdownMenuTrigger
                 disabled={!groupId}
-                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-hairline bg-surface-2 px-3 text-sm font-medium text-content shadow-soft outline-none transition-colors hover:bg-surface-3 focus-visible:ring-2 focus-visible:ring-brand/55 disabled:opacity-60"
+                className="border-hairline bg-surface-2 text-content shadow-soft hover:bg-surface-3 focus-visible:ring-brand/55 inline-flex h-9 items-center gap-1.5 rounded-lg border px-3 text-sm font-medium transition-colors outline-none focus-visible:ring-2 disabled:opacity-60"
               >
                 <Export size={16} aria-hidden="true" />
                 <span>{t('export')}</span>
@@ -216,7 +216,7 @@ export default function StatsPage() {
 
                 {stats.overTime.length > 0 ? (
                   <Card className="p-5">
-                    <h2 className="text-sm font-semibold text-content">{t('spendingOverTime')}</h2>
+                    <h2 className="text-content text-sm font-semibold">{t('spendingOverTime')}</h2>
                     <div className="mt-4">
                       <LineChart
                         data={stats.overTime.map((point) => ({
@@ -232,7 +232,7 @@ export default function StatsPage() {
 
                 {stats.byCategory.length > 0 ? (
                   <Card className="p-5">
-                    <h2 className="text-sm font-semibold text-content">{t('byCategory')}</h2>
+                    <h2 className="text-content text-sm font-semibold">{t('byCategory')}</h2>
                     <div className="mt-4">
                       <DonutChart
                         currency={stats.currency}
@@ -250,7 +250,7 @@ export default function StatsPage() {
 
                 {stats.byMember.length > 0 ? (
                   <Card className="p-5">
-                    <h2 className="text-sm font-semibold text-content">{t('byPerson')}</h2>
+                    <h2 className="text-content text-sm font-semibold">{t('byPerson')}</h2>
                     <div className="mt-4">
                       <BarChart
                         currency={stats.currency}

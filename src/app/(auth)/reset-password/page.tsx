@@ -73,7 +73,7 @@ function ResetPasswordForm() {
   const backToSignIn = (
     <Link
       href="/login"
-      className="font-medium text-content underline-offset-4 transition-colors hover:text-brand hover:underline"
+      className="text-content hover:text-brand font-medium underline-offset-4 transition-colors hover:underline"
     >
       {t('backToSignIn')}
     </Link>

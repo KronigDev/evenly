@@ -17,18 +17,18 @@ export default async function OfflinePage() {
   const tCommon = await getTranslations('common');
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center bg-canvas px-6 py-16">
-      <div className="surface-card flex w-full max-w-sm animate-fade-up flex-col items-center gap-5 px-7 py-9 text-center">
+    <main className="bg-canvas flex min-h-dvh flex-col items-center justify-center px-6 py-16">
+      <div className="surface-card animate-fade-up flex w-full max-w-sm flex-col items-center gap-5 px-7 py-9 text-center">
         <span
           aria-hidden="true"
-          className="flex h-16 w-16 items-center justify-center rounded-full border border-hairline bg-surface-2 text-content-muted"
+          className="border-hairline bg-surface-2 text-content-muted flex h-16 w-16 items-center justify-center rounded-full border"
         >
           <WifiSlash weight="regular" className="h-8 w-8" />
         </span>
 
         <div className="flex flex-col gap-2">
-          <h1 className="text-lg font-semibold text-content">{t('offline')}</h1>
-          <p className="text-pretty text-sm leading-relaxed text-content-muted">
+          <h1 className="text-content text-lg font-semibold">{t('offline')}</h1>
+          <p className="text-content-muted text-sm leading-relaxed text-pretty">
             {t('offlineBody')}
           </p>
         </div>

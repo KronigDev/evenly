@@ -31,16 +31,16 @@ function FriendRow({ friend }: { friend: GroupSummaryDTO }) {
   return (
     <Link
       href={`/groups/${friend.id}`}
-      className="block rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
+      className="focus-visible:ring-brand/55 focus-visible:ring-offset-canvas block rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
     >
       <Card interactive className="flex items-center gap-4 p-4">
         <Avatar name={name} size="md" />
         <div className="min-w-0 flex-1">
-          <p className="truncate font-medium text-content">{name}</p>
-          <p className="truncate text-xs text-content-muted">{caption}</p>
+          <p className="text-content truncate font-medium">{name}</p>
+          <p className="text-content-muted truncate text-xs">{caption}</p>
         </div>
         {settled ? (
-          <span aria-hidden="true" className="text-sm font-medium text-content-subtle">
+          <span aria-hidden="true" className="text-content-subtle text-sm font-medium">
             —
           </span>
         ) : (
@@ -52,7 +52,7 @@ function FriendRow({ friend }: { friend: GroupSummaryDTO }) {
             className="text-base font-semibold"
           />
         )}
-        <CaretRight size={16} aria-hidden="true" className="shrink-0 text-content-subtle" />
+        <CaretRight size={16} aria-hidden="true" className="text-content-subtle shrink-0" />
       </Card>
     </Link>
   );

@@ -70,21 +70,21 @@ function VerifyEmailContent() {
       footer={
         <Link
           href="/dashboard"
-          className="font-medium text-content underline-offset-4 transition-colors hover:text-brand hover:underline"
+          className="text-content hover:text-brand font-medium underline-offset-4 transition-colors hover:underline"
         >
           {te('goHome')}
         </Link>
       }
     >
       <div className="flex flex-col items-center gap-5 text-center">
-        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand/10 text-brand">
+        <span className="bg-brand/10 text-brand flex h-12 w-12 items-center justify-center rounded-full">
           <EnvelopeSimple size={24} aria-hidden="true" />
         </span>
 
         {errorParam ? (
           <p
             role="alert"
-            className="w-full rounded-lg border border-negative/30 bg-negative/10 px-3 py-2 text-sm text-negative"
+            className="border-negative/30 bg-negative/10 text-negative w-full rounded-lg border px-3 py-2 text-sm"
           >
             {errorParam === 'expired' ? t('linkExpired') : t('linkInvalid')}
           </p>
@@ -95,10 +95,10 @@ function VerifyEmailContent() {
         </Button>
 
         {needsSignIn ? (
-          <p className="text-sm text-content-muted">
+          <p className="text-content-muted text-sm">
             <Link
               href="/login"
-              className="font-medium text-content underline-offset-4 transition-colors hover:text-brand hover:underline"
+              className="text-content hover:text-brand font-medium underline-offset-4 transition-colors hover:underline"
             >
               {t('signIn')}
             </Link>

@@ -304,7 +304,7 @@ export function ExpenseForm({ group, members, mode, expense }: ExpenseFormProps)
       {errors.form ? (
         <p
           role="alert"
-          className="rounded-lg border border-negative/30 bg-negative/10 px-3 py-2 text-sm text-negative"
+          className="border-negative/30 bg-negative/10 text-negative rounded-lg border px-3 py-2 text-sm"
         >
           {errors.form}
         </p>
@@ -340,7 +340,7 @@ export function ExpenseForm({ group, members, mode, expense }: ExpenseFormProps)
       </Field>
 
       <fieldset className="space-y-2">
-        <legend className="mb-2 block text-sm font-medium text-content">{tc('category')}</legend>
+        <legend className="text-content mb-2 block text-sm font-medium">{tc('category')}</legend>
         <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-8">
           {EXPENSE_CATEGORIES.map((meta) => {
             const active = meta.key === category;
@@ -351,14 +351,14 @@ export function ExpenseForm({ group, members, mode, expense }: ExpenseFormProps)
                 onClick={() => setCategory(meta.key)}
                 aria-pressed={active}
                 className={cn(
-                  'flex flex-col items-center gap-1.5 rounded-xl border p-2 text-center outline-none transition-colors duration-150 ease-smooth focus-visible:ring-2 focus-visible:ring-brand/55',
+                  'ease-smooth focus-visible:ring-brand/55 flex flex-col items-center gap-1.5 rounded-xl border p-2 text-center transition-colors duration-150 outline-none focus-visible:ring-2',
                   active
                     ? 'border-brand bg-brand/[0.06]'
                     : 'border-hairline bg-surface hover:bg-surface-2',
                 )}
               >
                 <CategoryIcon category={meta.key} size="sm" />
-                <span className="w-full truncate text-2xs text-content-muted">
+                <span className="text-2xs text-content-muted w-full truncate">
                   {tCat(meta.key)}
                 </span>
               </button>
@@ -376,7 +376,7 @@ export function ExpenseForm({ group, members, mode, expense }: ExpenseFormProps)
         />
       </Field>
 
-      <section className="space-y-3 border-t border-hairline pt-6">
+      <section className="border-hairline space-y-3 border-t pt-6">
         <PayerSelector
           members={members}
           currency={currency}
@@ -385,11 +385,11 @@ export function ExpenseForm({ group, members, mode, expense }: ExpenseFormProps)
           value={payers}
           onChange={handlePayersChange}
         />
-        {errors.payers ? <p className="text-xs text-negative">{errors.payers}</p> : null}
+        {errors.payers ? <p className="text-negative text-xs">{errors.payers}</p> : null}
       </section>
 
-      <section className="space-y-3 border-t border-hairline pt-6">
-        <h2 className="text-sm font-medium text-content">{ts('howToSplit')}</h2>
+      <section className="border-hairline space-y-3 border-t pt-6">
+        <h2 className="text-content text-sm font-medium">{ts('howToSplit')}</h2>
         <SplitEditor
           members={members}
           currency={currency}
@@ -398,7 +398,7 @@ export function ExpenseForm({ group, members, mode, expense }: ExpenseFormProps)
           onChange={setSplitState}
           onTotalChange={setTotalMinor}
         />
-        {errors.split ? <p className="text-xs text-negative">{errors.split}</p> : null}
+        {errors.split ? <p className="text-negative text-xs">{errors.split}</p> : null}
       </section>
 
       <Field label={t('notes')} htmlFor="expense-note">
@@ -410,8 +410,8 @@ export function ExpenseForm({ group, members, mode, expense }: ExpenseFormProps)
         />
       </Field>
 
-      <section className="space-y-2 border-t border-hairline pt-6">
-        <h2 className="text-sm font-medium text-content">{t('receipt')}</h2>
+      <section className="border-hairline space-y-2 border-t pt-6">
+        <h2 className="text-content text-sm font-medium">{t('receipt')}</h2>
         <ReceiptUploader
           mode={mode}
           expenseId={expense?.id}
@@ -421,13 +421,13 @@ export function ExpenseForm({ group, members, mode, expense }: ExpenseFormProps)
         />
       </section>
 
-      <section className="border-t border-hairline pt-6">
+      <section className="border-hairline border-t pt-6">
         <RecurringFields value={recurring} onChange={setRecurring} />
       </section>
 
       {youMemberId && preview.ok ? (
-        <div className="flex items-center justify-between rounded-xl border border-hairline bg-surface-2/60 px-4 py-3">
-          <span className="text-sm font-medium text-content">{t('yourShare')}</span>
+        <div className="border-hairline bg-surface-2/60 flex items-center justify-between rounded-xl border px-4 py-3">
+          <span className="text-content text-sm font-medium">{t('yourShare')}</span>
           <span className="flex items-center gap-3">
             <Money cents={youOwed} currency={currency} className="text-content" />
             {youNet !== 0 ? (

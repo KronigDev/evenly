@@ -145,7 +145,7 @@ export function MembersPanel({ group, balances }: MembersPanelProps) {
 
       {/* Members */}
       <Card className="overflow-hidden">
-        <ul className="divide-y divide-hairline">
+        <ul className="divide-hairline divide-y">
           {visibleMembers.map((member) => {
             const net = netMap.get(member.id) ?? 0;
             const canRemind = !member.isYou && owesYou.has(member.id);
@@ -154,11 +154,11 @@ export function MembersPanel({ group, balances }: MembersPanelProps) {
                 <MemberAvatar member={member} size="md" />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                    <span className="truncate text-sm font-medium text-content">
+                    <span className="text-content truncate text-sm font-medium">
                       {member.displayName}
                     </span>
                     {member.isYou ? (
-                      <span className="text-xs text-content-subtle">{tc('you')}</span>
+                      <span className="text-content-subtle text-xs">{tc('you')}</span>
                     ) : null}
                   </div>
                   <div className="mt-1 flex flex-wrap items-center gap-1.5">
@@ -181,7 +181,7 @@ export function MembersPanel({ group, balances }: MembersPanelProps) {
                       className="text-sm font-medium"
                     />
                   ) : (
-                    <span className="text-xs text-content-subtle">{tc('done')}</span>
+                    <span className="text-content-subtle text-xs">{tc('done')}</span>
                   )}
 
                   {canRemind ? (
@@ -200,7 +200,7 @@ export function MembersPanel({ group, balances }: MembersPanelProps) {
                     <DropdownMenu>
                       <DropdownMenuTrigger
                         aria-label={tc('actions')}
-                        className="grid h-8 w-8 place-items-center rounded-md text-content-muted outline-none transition-colors hover:bg-surface-2 focus-visible:ring-2 focus-visible:ring-brand/55"
+                        className="text-content-muted hover:bg-surface-2 focus-visible:ring-brand/55 grid h-8 w-8 place-items-center rounded-md transition-colors outline-none focus-visible:ring-2"
                       >
                         <DotsThree size={20} weight="bold" />
                       </DropdownMenuTrigger>
@@ -242,7 +242,7 @@ export function MembersPanel({ group, balances }: MembersPanelProps) {
 
       {/* Pending invites */}
       <Card className="overflow-hidden">
-        <div className="border-b border-hairline px-4 py-2.5">
+        <div className="border-hairline border-b px-4 py-2.5">
           <p className="eyebrow">{ti('pending')}</p>
         </div>
         {invitesQuery.isLoading ? (
@@ -250,12 +250,12 @@ export function MembersPanel({ group, balances }: MembersPanelProps) {
             <Skeleton className="h-8 w-full rounded-lg" />
           </div>
         ) : pendingInvites.length === 0 ? (
-          <p className="px-4 py-3 text-sm text-content-subtle">{ti('noPending')}</p>
+          <p className="text-content-subtle px-4 py-3 text-sm">{ti('noPending')}</p>
         ) : (
-          <ul className="divide-y divide-hairline">
+          <ul className="divide-hairline divide-y">
             {pendingInvites.map((invite) => (
               <li key={invite.id} className="flex items-center gap-3 px-4 py-2.5">
-                <span className="min-w-0 flex-1 truncate text-sm text-content">{invite.email}</span>
+                <span className="text-content min-w-0 flex-1 truncate text-sm">{invite.email}</span>
                 <Badge tone="warning">{ti('pending')}</Badge>
                 {isAdmin ? (
                   <IconButton

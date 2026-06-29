@@ -12,7 +12,7 @@ import {
   type ReactNode,
   type RefObject,
 } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { cn } from '@/lib/utils/cn';
 
 interface DropdownContextValue {
@@ -147,7 +147,7 @@ export function DropdownMenuContent({
           exit={{ opacity: 0, scale: reduce ? 1 : 0.96, y: reduce ? 0 : -4 }}
           transition={{ duration: reduce ? 0 : 0.14, ease: [0.16, 1, 0.3, 1] }}
           className={cn(
-            'absolute z-50 mt-2 min-w-[12rem] origin-top overflow-hidden rounded-xl border border-hairline bg-surface p-1 shadow-pop',
+            'border-hairline bg-surface shadow-pop absolute z-50 mt-2 min-w-[12rem] origin-top overflow-hidden rounded-xl border p-1',
             align === 'end' ? 'right-0' : 'left-0',
             className,
           )}
@@ -188,7 +188,7 @@ export function DropdownMenuItem({
         triggerRef.current?.focus();
       }}
       className={cn(
-        'flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm outline-none transition-colors duration-100 ease-smooth',
+        'ease-smooth flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm transition-colors duration-100 outline-none',
         'hover:bg-surface-2 focus-visible:bg-surface-2',
         danger ? 'text-negative' : 'text-content',
         disabled && 'pointer-events-none opacity-50',
@@ -206,5 +206,5 @@ export function DropdownMenuItem({
 }
 
 export function DropdownMenuSeparator({ className }: { className?: string }) {
-  return <div role="separator" className={cn('-mx-1 my-1 h-px bg-hairline', className)} />;
+  return <div role="separator" className={cn('bg-hairline -mx-1 my-1 h-px', className)} />;
 }

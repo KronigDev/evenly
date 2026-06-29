@@ -61,7 +61,7 @@ export function ConfirmDialog({
       <DialogHeader title={title} onClose={pending ? undefined : () => onOpenChange(false)} />
       {description ? (
         <DialogBody>
-          <p className="text-pretty text-sm text-content-muted">{description}</p>
+          <p className="text-content-muted text-sm text-pretty">{description}</p>
         </DialogBody>
       ) : null}
       <DialogFooter>

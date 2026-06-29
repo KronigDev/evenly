@@ -29,8 +29,8 @@ export function Switch({
       disabled={disabled}
       onClick={() => onCheckedChange(!checked)}
       className={cn(
-        'relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border border-transparent outline-none transition-colors duration-200 ease-spring',
-        'focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas',
+        'ease-spring relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border border-transparent transition-colors duration-200 outline-none',
+        'focus-visible:ring-brand/55 focus-visible:ring-offset-canvas focus-visible:ring-2 focus-visible:ring-offset-2',
         'disabled:cursor-not-allowed disabled:opacity-55',
         checked ? 'bg-brand' : 'bg-surface-3',
         className,
@@ -40,7 +40,7 @@ export function Switch({
       <span
         aria-hidden="true"
         className={cn(
-          'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-surface shadow-soft ring-1 ring-black/5 transition-transform duration-200 ease-spring',
+          'bg-surface shadow-soft ease-spring pointer-events-none inline-block h-5 w-5 transform rounded-full ring-1 ring-black/5 transition-transform duration-200',
           checked ? 'translate-x-[22px]' : 'translate-x-0.5',
         )}
       />

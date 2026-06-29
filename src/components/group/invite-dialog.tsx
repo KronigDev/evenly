@@ -125,24 +125,24 @@ export function InviteDialog({ open, onOpenChange, group }: InviteDialogProps) {
         </form>
 
         {shareUrl ? (
-          <section className="space-y-2 rounded-xl border border-hairline bg-surface-2 p-3">
+          <section className="border-hairline bg-surface-2 space-y-2 rounded-xl border p-3">
             <p className="eyebrow">{t('shareVia')}</p>
             <ShareButtons url={shareUrl} groupName={group.name} />
           </section>
         ) : null}
 
         {/* Pending invites */}
-        <section className="space-y-2 border-t border-hairline pt-4">
+        <section className="border-hairline space-y-2 border-t pt-4">
           <p className="eyebrow">{t('pending')}</p>
           {invitesQuery.isLoading ? (
             <Skeleton className="h-10 w-full rounded-lg" />
           ) : pending.length === 0 ? (
-            <p className="py-1 text-sm text-content-subtle">{t('noPending')}</p>
+            <p className="text-content-subtle py-1 text-sm">{t('noPending')}</p>
           ) : (
-            <ul className="divide-y divide-hairline overflow-hidden rounded-xl border border-hairline">
+            <ul className="divide-hairline border-hairline divide-y overflow-hidden rounded-xl border">
               {pending.map((invite) => (
                 <li key={invite.id} className="flex items-center gap-3 px-3 py-2.5">
-                  <span className="min-w-0 flex-1 truncate text-sm text-content">
+                  <span className="text-content min-w-0 flex-1 truncate text-sm">
                     {invite.email}
                   </span>
                   <Badge tone="warning">{t('pending')}</Badge>

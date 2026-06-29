@@ -88,7 +88,7 @@ export function ExpenseList({ group }: ExpenseListProps) {
             <MagnifyingGlass
               size={16}
               aria-hidden="true"
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-content-subtle"
+              className="text-content-subtle pointer-events-none absolute top-1/2 left-3 -translate-y-1/2"
             />
             <Input
               type="search"
@@ -156,7 +156,7 @@ export function ExpenseList({ group }: ExpenseListProps) {
       {/* List */}
       <Card className="overflow-hidden">
         {query.isLoading ? (
-          <ul className="divide-y divide-hairline">
+          <ul className="divide-hairline divide-y">
             {Array.from({ length: 6 }).map((_, index) => (
               <li key={index} className="flex items-center gap-3 px-4 py-3">
                 <Skeleton className="h-10 w-10 rounded-xl" />
@@ -203,7 +203,7 @@ export function ExpenseList({ group }: ExpenseListProps) {
           )
         ) : (
           <>
-            <ul className="divide-y divide-hairline">
+            <ul className="divide-hairline divide-y">
               {expenses.map((expense) => (
                 <li key={expense.id}>
                   <ExpenseRow
@@ -216,7 +216,7 @@ export function ExpenseList({ group }: ExpenseListProps) {
               ))}
             </ul>
             {query.hasNextPage ? (
-              <div className="border-t border-hairline p-3">
+              <div className="border-hairline border-t p-3">
                 <Button
                   variant="ghost"
                   fullWidth

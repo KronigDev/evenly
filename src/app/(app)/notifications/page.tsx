@@ -141,7 +141,7 @@ export default function NotificationsPage() {
 
       <div className="mt-6">
         {isLoading ? (
-          <div className="surface-card divide-y divide-hairline">
+          <div className="surface-card divide-hairline divide-y">
             {[0, 1, 2, 3].map((row) => (
               <div key={row} className="flex items-start gap-3 px-4 py-4 sm:px-5">
                 <Skeleton className="h-9 w-9 shrink-0 rounded-lg" />
@@ -169,7 +169,7 @@ export default function NotificationsPage() {
             description={t('noNotificationsBody')}
           />
         ) : (
-          <ul className="surface-card divide-y divide-hairline">
+          <ul className="surface-card divide-hairline divide-y">
             {notifications.map((notification) => {
               const spec = NOTIFICATION_MESSAGES[notification.type];
               const IconComponent = spec?.icon ?? Bell;
@@ -202,7 +202,7 @@ export default function NotificationsPage() {
                     type="button"
                     onClick={() => handleOpen(notification)}
                     className={cn(
-                      'flex w-full items-start gap-3 px-4 py-4 text-left outline-none transition-colors hover:bg-surface-2 focus-visible:bg-surface-2 sm:px-5',
+                      'hover:bg-surface-2 focus-visible:bg-surface-2 flex w-full items-start gap-3 px-4 py-4 text-left transition-colors outline-none sm:px-5',
                       !notification.read && 'bg-brand/[0.04]',
                     )}
                   >
@@ -220,15 +220,15 @@ export default function NotificationsPage() {
                     <div className="min-w-0 flex-1">
                       <p
                         className={cn(
-                          'text-pretty text-sm',
-                          notification.read ? 'text-content-muted' : 'font-medium text-content',
+                          'text-sm text-pretty',
+                          notification.read ? 'text-content-muted' : 'text-content font-medium',
                         )}
                       >
                         {text}
                       </p>
                       <time
                         dateTime={notification.createdAt}
-                        className="mt-0.5 block text-2xs text-content-subtle"
+                        className="text-2xs text-content-subtle mt-0.5 block"
                       >
                         {formatDistanceToNowStrict(new Date(notification.createdAt), {
                           addSuffix: true,
@@ -239,7 +239,7 @@ export default function NotificationsPage() {
                     {!notification.read ? (
                       <span
                         aria-label={t('unread')}
-                        className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand"
+                        className="bg-brand mt-1.5 h-2 w-2 shrink-0 rounded-full"
                       />
                     ) : null}
                   </button>

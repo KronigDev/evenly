@@ -98,7 +98,7 @@ export default function GroupsPage() {
                 type="button"
                 onClick={() => setShowArchived((value) => !value)}
                 aria-expanded={showArchived}
-                className="flex items-center gap-2 rounded-md text-sm font-medium text-content-muted outline-none transition-colors hover:text-content focus-visible:ring-2 focus-visible:ring-brand/55"
+                className="text-content-muted hover:text-content focus-visible:ring-brand/55 flex items-center gap-2 rounded-md text-sm font-medium transition-colors outline-none focus-visible:ring-2"
               >
                 <CaretDown
                   size={16}

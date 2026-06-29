@@ -286,7 +286,7 @@ export function SplitEditor({
         aria-label={t('splitMethod')}
       />
 
-      <p className="text-xs text-content-muted">{methodHints[value.method]}</p>
+      <p className="text-content-muted text-xs">{methodHints[value.method]}</p>
 
       {value.method === 'EQUAL' ? (
         <MemberMultiSelect
@@ -403,18 +403,18 @@ export function SplitEditor({
       />
 
       {preview.entries.length > 0 ? (
-        <div className="rounded-xl border border-hairline bg-surface-2/60">
-          <p className="border-b border-hairline px-3 py-2 text-2xs font-medium uppercase tracking-eyebrow text-content-subtle">
+        <div className="border-hairline bg-surface-2/60 rounded-xl border">
+          <p className="border-hairline text-2xs tracking-eyebrow text-content-subtle border-b px-3 py-2 font-medium uppercase">
             {t('splitWith')}
           </p>
-          <ul className="divide-y divide-hairline">
+          <ul className="divide-hairline divide-y">
             {members
               .filter((member) => owedById.has(member.id))
               .map((member) => (
                 <li key={member.id} className="flex items-center justify-between gap-3 px-3 py-1.5">
                   <span className="flex min-w-0 items-center gap-2.5">
                     <MemberAvatar member={member} size="sm" />
-                    <span className="truncate text-sm text-content">{member.displayName}</span>
+                    <span className="text-content truncate text-sm">{member.displayName}</span>
                   </span>
                   <Money cents={owedById.get(member.id) ?? 0} currency={currency} />
                 </li>
@@ -432,7 +432,7 @@ export function SplitEditor({
 
 function MemberRows({ children }: { children: ReactNode }) {
   return (
-    <ul className="divide-y divide-hairline overflow-hidden rounded-xl border border-hairline bg-surface">
+    <ul className="divide-hairline border-hairline bg-surface divide-y overflow-hidden rounded-xl border">
       {children}
     </ul>
   );
@@ -456,13 +456,13 @@ function MemberRow({ member, youLabel, children, included, onIncludedChange }: M
             checked={included ?? true}
             onChange={(event) => onIncludedChange(event.target.checked)}
             aria-label={member.displayName}
-            className="h-[18px] w-[18px] shrink-0 cursor-pointer accent-brand"
+            className="accent-brand h-[18px] w-[18px] shrink-0 cursor-pointer"
           />
         ) : null}
         <MemberAvatar member={member} size="sm" />
-        <span className="truncate text-sm text-content">{member.displayName}</span>
+        <span className="text-content truncate text-sm">{member.displayName}</span>
         {member.isYou ? (
-          <span className="shrink-0 text-2xs font-medium uppercase tracking-eyebrow text-content-subtle">
+          <span className="text-2xs tracking-eyebrow text-content-subtle shrink-0 font-medium uppercase">
             {youLabel}
           </span>
         ) : null}
@@ -513,11 +513,11 @@ function NumberBox({ value, onChange, suffix, step, min, max, ariaLabel }: Numbe
         className={cn(
           controlBaseClass,
           'tabular h-9 text-right font-mono',
-          suffix ? 'pl-3 pr-7' : 'px-3',
+          suffix ? 'pr-7 pl-3' : 'px-3',
         )}
       />
       {suffix ? (
-        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-content-subtle">
+        <span className="text-content-subtle pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-xs">
           {suffix}
         </span>
       ) : null}
@@ -586,7 +586,7 @@ function ItemizedEditor({ members, currency, items, onItemsChange }: ItemizedEdi
               showSelectAll={false}
             />
             {item.memberIds.length === 0 ? (
-              <p className="mt-1 text-xs text-negative">{ts('selectAtLeastOne')}</p>
+              <p className="text-negative mt-1 text-xs">{ts('selectAtLeastOne')}</p>
             ) : null}
           </div>
         </div>

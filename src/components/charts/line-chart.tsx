@@ -76,7 +76,7 @@ export function LineChart({ data, currency, className, 'aria-label': ariaLabel }
   }
 
   return (
-    <figure className={cn('w-full text-brand', className)}>
+    <figure className={cn('text-brand w-full', className)}>
       <div className="relative w-full">
         <svg
           role="img"
@@ -95,7 +95,7 @@ export function LineChart({ data, currency, className, 'aria-label': ariaLabel }
             <path
               d={areaPath}
               fill={`url(#${gradientId})`}
-              className="opacity-0 transition-opacity duration-700 ease-smooth motion-reduce:opacity-100 motion-reduce:transition-none"
+              className="ease-smooth opacity-0 transition-opacity duration-700 motion-reduce:opacity-100 motion-reduce:transition-none"
               style={{ opacity: mounted ? 1 : undefined }}
             />
           ) : null}
@@ -110,19 +110,19 @@ export function LineChart({ data, currency, className, 'aria-label': ariaLabel }
             pathLength={100}
             strokeDasharray={100}
             strokeDashoffset={mounted ? 0 : 100}
-            className="transition-[stroke-dashoffset] duration-[900ms] ease-smooth motion-reduce:transition-none"
+            className="ease-smooth transition-[stroke-dashoffset] duration-[900ms] motion-reduce:transition-none"
           />
         </svg>
         {last ? (
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand ring-2 ring-surface"
+            className="bg-brand ring-surface pointer-events-none absolute h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2"
             style={{ left: `${last.x}%`, top: `${(last.y / VIEW_H) * 100}%` }}
           />
         ) : null}
       </div>
 
-      <div className="mt-2 flex justify-between gap-2 text-2xs text-content-subtle">
+      <div className="text-2xs text-content-subtle mt-2 flex justify-between gap-2">
         {tickIndices.map((tickIndex) => {
           const point = data[tickIndex];
           return (

@@ -16,10 +16,10 @@ export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
 
 export function Label({ required, className, children, ...props }: LabelProps) {
   return (
-    <label className={cn('block text-sm font-medium text-content', className)} {...props}>
+    <label className={cn('text-content block text-sm font-medium', className)} {...props}>
       {children}
       {required ? (
-        <span aria-hidden="true" className="ml-0.5 text-negative">
+        <span aria-hidden="true" className="text-negative ml-0.5">
           *
         </span>
       ) : null}
@@ -79,12 +79,12 @@ export function Field({ label, hint, error, required, htmlFor, children, classNa
       ) : null}
       {control}
       {hint && !error ? (
-        <p id={hintId} className="text-xs text-content-muted">
+        <p id={hintId} className="text-content-muted text-xs">
           {hint}
         </p>
       ) : null}
       {error ? (
-        <p id={errorId} className="text-xs text-negative">
+        <p id={errorId} className="text-negative text-xs">
           {error}
         </p>
       ) : null}

@@ -47,7 +47,7 @@ export function LocaleToggle({ className }: { className?: string }) {
       <DropdownMenuTrigger
         disabled={pending}
         className={cn(
-          'inline-flex items-center gap-1.5 rounded-lg border border-hairline bg-surface px-2.5 py-1.5 text-sm font-medium text-content shadow-soft outline-none transition-colors hover:bg-surface-2 focus-visible:ring-2 focus-visible:ring-brand/55 disabled:opacity-60',
+          'border-hairline bg-surface text-content shadow-soft hover:bg-surface-2 focus-visible:ring-brand/55 inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-sm font-medium transition-colors outline-none focus-visible:ring-2 disabled:opacity-60',
           className,
         )}
       >

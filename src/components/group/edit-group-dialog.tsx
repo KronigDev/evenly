@@ -154,7 +154,7 @@ export function EditGroupDialog({ open, onOpenChange, group, onSaved }: EditGrou
           </div>
 
           <fieldset className="space-y-1.5">
-            <legend className="block text-sm font-medium text-content">{t('color')}</legend>
+            <legend className="text-content block text-sm font-medium">{t('color')}</legend>
             <div className="flex flex-wrap gap-2">
               {GROUP_COLORS.map((option) => {
                 const selected = option === color;
@@ -166,9 +166,9 @@ export function EditGroupDialog({ open, onOpenChange, group, onSaved }: EditGrou
                     aria-pressed={selected}
                     onClick={() => setColor(option)}
                     className={cn(
-                      'grid h-8 w-8 place-items-center rounded-full text-white outline-none transition-transform duration-150 ease-smooth focus-visible:ring-2 focus-visible:ring-brand/55 active:scale-90',
+                      'ease-smooth focus-visible:ring-brand/55 grid h-8 w-8 place-items-center rounded-full text-white transition-transform duration-150 outline-none focus-visible:ring-2 active:scale-90',
                       groupSwatchClass(option),
-                      selected ? 'ring-2 ring-content ring-offset-2 ring-offset-surface' : '',
+                      selected ? 'ring-content ring-offset-surface ring-2 ring-offset-2' : '',
                     )}
                   >
                     {selected ? <Check size={16} weight="bold" /> : null}
@@ -178,10 +178,10 @@ export function EditGroupDialog({ open, onOpenChange, group, onSaved }: EditGrou
             </div>
           </fieldset>
 
-          <div className="flex items-center justify-between gap-4 rounded-xl border border-hairline bg-surface-2 px-4 py-3">
+          <div className="border-hairline bg-surface-2 flex items-center justify-between gap-4 rounded-xl border px-4 py-3">
             <div className="min-w-0">
-              <p className="text-sm font-medium text-content">{t('simplifyDebts')}</p>
-              <p className="text-xs text-content-muted">{t('simplifyDebtsHint')}</p>
+              <p className="text-content text-sm font-medium">{t('simplifyDebts')}</p>
+              <p className="text-content-muted text-xs">{t('simplifyDebtsHint')}</p>
             </div>
             <Switch
               checked={simplifyDebts}

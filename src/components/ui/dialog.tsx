@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type HTMLAttributes, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { X } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils/cn';
 import { IconButton } from './icon-button';
@@ -94,7 +94,7 @@ export function Dialog({
         <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
           <motion.div
             aria-hidden="true"
-            className="absolute inset-0 bg-ink/40 backdrop-blur-[2px]"
+            className="bg-ink/40 absolute inset-0 backdrop-blur-[2px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -107,7 +107,7 @@ export function Dialog({
             aria-modal="true"
             tabIndex={-1}
             className={cn(
-              'relative z-10 flex max-h-[90vh] w-full flex-col overflow-hidden border border-hairline bg-surface shadow-pop outline-none',
+              'border-hairline bg-surface shadow-pop relative z-10 flex max-h-[90vh] w-full flex-col overflow-hidden border outline-none',
               'rounded-2xl max-sm:rounded-b-none sm:max-w-lg',
               className,
             )}
@@ -138,11 +138,11 @@ export interface DialogHeaderProps {
 
 export function DialogHeader({ title, description, onClose, className }: DialogHeaderProps) {
   return (
-    <div className={cn('flex items-start gap-3 border-b border-hairline px-5 py-4', className)}>
+    <div className={cn('border-hairline flex items-start gap-3 border-b px-5 py-4', className)}>
       <div className="min-w-0 flex-1">
-        <h2 className="text-base font-semibold text-content">{title}</h2>
+        <h2 className="text-content text-base font-semibold">{title}</h2>
         {description ? (
-          <p className="mt-1 text-pretty text-sm text-content-muted">{description}</p>
+          <p className="text-content-muted mt-1 text-sm text-pretty">{description}</p>
         ) : null}
       </div>
       {onClose ? (
@@ -162,7 +162,7 @@ export function DialogFooter({ className, ...props }: HTMLAttributes<HTMLDivElem
   return (
     <div
       className={cn(
-        'flex items-center justify-end gap-2 border-t border-hairline px-5 py-4',
+        'border-hairline flex items-center justify-end gap-2 border-t px-5 py-4',
         className,
       )}
       {...props}

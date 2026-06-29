@@ -1,7 +1,7 @@
 'use client';
 
 import { useId, useRef, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion } from 'motion/react';
 import { cn } from '@/lib/utils/cn';
 
 export interface TabItem<T extends string> {
@@ -56,7 +56,7 @@ export function Tabs<T extends string>({
     <div
       role="tablist"
       aria-label={ariaLabel}
-      className={cn('flex items-center gap-1 border-b border-hairline', className)}
+      className={cn('border-hairline flex items-center gap-1 border-b', className)}
     >
       {items.map((item, index) => {
         const active = item.value === value;
@@ -73,7 +73,7 @@ export function Tabs<T extends string>({
             onClick={() => onValueChange(item.value)}
             onKeyDown={(event) => onKeyDown(event, index)}
             className={cn(
-              'relative -mb-px inline-flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium outline-none transition-colors duration-150 ease-smooth focus-visible:rounded-md focus-visible:ring-2 focus-visible:ring-brand/55',
+              'ease-smooth focus-visible:ring-brand/55 relative -mb-px inline-flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium transition-colors duration-150 outline-none focus-visible:rounded-md focus-visible:ring-2',
               active ? 'text-content' : 'text-content-muted hover:text-content',
             )}
           >
@@ -83,7 +83,7 @@ export function Tabs<T extends string>({
               <motion.span
                 layoutId={layoutId}
                 aria-hidden="true"
-                className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-ink"
+                className="bg-ink absolute inset-x-0 -bottom-px h-0.5 rounded-full"
                 transition={
                   reduce ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 36 }
                 }

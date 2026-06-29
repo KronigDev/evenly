@@ -24,11 +24,11 @@ export function PageHeader({ title, description, action, actions, className }: P
       )}
     >
       <div className="min-w-0">
-        <h1 className="text-balance text-2xl font-semibold tracking-tight text-content sm:text-3xl">
+        <h1 className="text-content text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
           {title}
         </h1>
         {description ? (
-          <p className="mt-1 text-pretty text-sm text-content-muted">{description}</p>
+          <p className="text-content-muted mt-1 text-sm text-pretty">{description}</p>
         ) : null}
       </div>
       {trailing ? <div className="flex shrink-0 items-center gap-2">{trailing}</div> : null}

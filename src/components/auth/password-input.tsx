@@ -28,7 +28,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
           onClick={() => setVisible((current) => !current)}
           aria-label={visible ? 'Hide password' : 'Show password'}
           aria-pressed={visible}
-          className="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-lg text-content-subtle outline-none transition-colors hover:text-content focus-visible:text-content"
+          className="text-content-subtle hover:text-content focus-visible:text-content absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-lg transition-colors outline-none"
         >
           {visible ? (
             <EyeSlash size={18} aria-hidden="true" />

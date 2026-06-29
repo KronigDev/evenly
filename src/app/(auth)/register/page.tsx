@@ -94,7 +94,7 @@ function RegisterForm() {
           {t('alreadyHaveAccount')}{' '}
           <Link
             href={withNext('/login', next)}
-            className="font-medium text-content underline-offset-4 transition-colors hover:text-brand hover:underline"
+            className="text-content hover:text-brand font-medium underline-offset-4 transition-colors hover:underline"
           >
             {t('signIn')}
           </Link>
@@ -141,7 +141,7 @@ function RegisterForm() {
           {submitting ? t('creatingAccount') : t('createAccount')}
         </Button>
 
-        <p className="text-pretty text-center text-xs text-content-subtle">{t('termsNotice')}</p>
+        <p className="text-content-subtle text-center text-xs text-pretty">{t('termsNotice')}</p>
       </form>
     </AuthCard>
   );

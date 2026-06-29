@@ -208,10 +208,10 @@ function PreferencesSection({ user, setUser }: SectionProps) {
     currentTheme === 'light' || currentTheme === 'dark' ? currentTheme : 'system';
 
   return (
-    <Card className="divide-y divide-hairline p-0">
+    <Card className="divide-hairline divide-y p-0">
       <div className="flex flex-col gap-3 px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-medium text-content">{t('language')}</p>
+          <p className="text-content text-sm font-medium">{t('language')}</p>
         </div>
         <Select
           aria-label={t('language')}
@@ -226,7 +226,7 @@ function PreferencesSection({ user, setUser }: SectionProps) {
       </div>
 
       <div className="flex flex-col gap-3 px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm font-medium text-content">{t('theme')}</p>
+        <p className="text-content text-sm font-medium">{t('theme')}</p>
         <SegmentedControl<'light' | 'dark' | 'system'>
           size="sm"
           aria-label={t('theme')}
@@ -278,16 +278,16 @@ function NotificationsSection({ user, setUser }: SectionProps) {
 
   return (
     <Card className="p-0">
-      <div className="border-b border-hairline px-5 py-4">
-        <p className="text-sm font-medium text-content">{t('emailNotifications')}</p>
-        <p className="mt-0.5 text-xs text-content-muted">{t('manageNotifications')}</p>
+      <div className="border-hairline border-b px-5 py-4">
+        <p className="text-content text-sm font-medium">{t('emailNotifications')}</p>
+        <p className="text-content-muted mt-0.5 text-xs">{t('manageNotifications')}</p>
       </div>
-      <ul className="divide-y divide-hairline">
+      <ul className="divide-hairline divide-y">
         {NOTIFY_KEYS.map(({ key, label }) => {
           const id = `${baseId}-${key}`;
           return (
             <li key={key} className="flex items-center justify-between gap-4 px-5 py-4">
-              <label htmlFor={id} className="text-sm text-content">
+              <label htmlFor={id} className="text-content text-sm">
                 {t(label)}
               </label>
               <Switch
@@ -356,18 +356,18 @@ function PasswordCard({ user }: { user: UserDTO }) {
 
   return (
     <Card className="p-5 sm:p-6">
-      <h2 className="text-sm font-semibold text-content">
+      <h2 className="text-content text-sm font-semibold">
         {user.hasPassword ? t('changePassword') : t('setPassword')}
       </h2>
       {!user.hasPassword ? (
-        <p className="mt-1 text-xs text-content-muted">{t('noPasswordHint')}</p>
+        <p className="text-content-muted mt-1 text-xs">{t('noPasswordHint')}</p>
       ) : null}
 
       <form onSubmit={submit} className="mt-4 space-y-4" noValidate>
         {error ? (
           <p
             role="alert"
-            className="rounded-lg border border-negative/30 bg-negative/10 px-3 py-2 text-sm text-negative"
+            className="border-negative/30 bg-negative/10 text-negative rounded-lg border px-3 py-2 text-sm"
           >
             {error}
           </p>
@@ -432,8 +432,8 @@ function DangerZone() {
 
   return (
     <Card className="border-negative/30 p-5 sm:p-6">
-      <h2 className="text-sm font-semibold text-negative">{t('dangerZone')}</h2>
-      <p className="mt-1 max-w-prose text-pretty text-sm text-content-muted">
+      <h2 className="text-negative text-sm font-semibold">{t('dangerZone')}</h2>
+      <p className="text-content-muted mt-1 max-w-prose text-sm text-pretty">
         {t('deleteAccountWarning')}
       </p>
       <div className="mt-4">

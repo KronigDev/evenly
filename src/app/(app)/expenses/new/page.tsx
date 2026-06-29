@@ -28,10 +28,10 @@ export default function NewExpensePickerPage() {
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight text-content">
+        <h1 className="text-content text-2xl font-semibold tracking-tight">
           {t('expenses.addExpense')}
         </h1>
-        <p className="mt-1 text-sm text-content-muted">{t('expenses.expenseDetails')}</p>
+        <p className="text-content-muted mt-1 text-sm">{t('expenses.expenseDetails')}</p>
       </header>
 
       {isLoading ? (
@@ -70,17 +70,17 @@ export default function NewExpensePickerPage() {
               >
                 <span
                   aria-hidden
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-surface-2 text-lg"
+                  className="bg-surface-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-lg"
                 >
                   {group.emoji ?? '💸'}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate font-medium text-content">{group.name}</span>
-                  <span className="block text-xs text-content-muted">
+                  <span className="text-content block truncate font-medium">{group.name}</span>
+                  <span className="text-content-muted block text-xs">
                     {t('groups.memberCount', { count: group.memberCount })}
                   </span>
                 </span>
-                <CaretRight weight="bold" className="shrink-0 text-content-subtle" />
+                <CaretRight weight="bold" className="text-content-subtle shrink-0" />
               </Card>
             </li>
           ))}

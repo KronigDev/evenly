@@ -35,12 +35,12 @@ export function MemberAvatar({ member, size = 'md', className }: MemberAvatarPro
         name={name}
         image={image}
         size={size}
-        className={pending ? 'opacity-90 ring-1 ring-warning/45' : undefined}
+        className={pending ? 'ring-warning/45 opacity-90 ring-1' : undefined}
       />
       {pending ? (
         <span
           className={cn(
-            'absolute -bottom-0.5 -right-0.5 grid place-items-center rounded-full bg-warning text-white ring-2 ring-canvas',
+            'bg-warning ring-canvas absolute -right-0.5 -bottom-0.5 grid place-items-center rounded-full text-white ring-2',
             badgeSizeClass[size],
           )}
           title="Invitation pending"

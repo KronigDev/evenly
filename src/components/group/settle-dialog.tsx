@@ -162,7 +162,7 @@ export function SettleDialog({ open, onOpenChange, group, prefill }: SettleDialo
                 ))}
               </Select>
             </Field>
-            <div className="hidden pb-2.5 text-content-subtle sm:block" aria-hidden="true">
+            <div className="text-content-subtle hidden pb-2.5 sm:block" aria-hidden="true">
               <ArrowRight size={18} />
             </div>
             <Field label={t('paymentTo')}>
@@ -207,7 +207,7 @@ export function SettleDialog({ open, onOpenChange, group, prefill }: SettleDialo
         </form>
 
         {/* Settlement history */}
-        <section className="space-y-2 border-t border-hairline pt-4">
+        <section className="border-hairline space-y-2 border-t pt-4">
           <p className="eyebrow">{t('settlementHistory')}</p>
           {settlementsQuery.isLoading ? (
             <div className="space-y-2">
@@ -215,21 +215,21 @@ export function SettleDialog({ open, onOpenChange, group, prefill }: SettleDialo
               <Skeleton className="h-10 w-full rounded-lg" />
             </div>
           ) : settlements.length === 0 ? (
-            <p className="py-2 text-sm text-content-subtle">{t('noSettlements')}</p>
+            <p className="text-content-subtle py-2 text-sm">{t('noSettlements')}</p>
           ) : (
-            <ul className="divide-y divide-hairline overflow-hidden rounded-xl border border-hairline">
+            <ul className="divide-hairline border-hairline divide-y overflow-hidden rounded-xl border">
               {settlements.map((settlement) => (
                 <li key={settlement.id} className="flex items-center gap-3 px-3 py-2.5">
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm text-content">
+                    <p className="text-content truncate text-sm">
                       {memberName(settlement.fromMemberId)}
                       <ArrowRight
                         size={12}
-                        className="mx-1 inline align-middle text-content-subtle"
+                        className="text-content-subtle mx-1 inline align-middle"
                       />
                       {memberName(settlement.toMemberId)}
                     </p>
-                    <p className="truncate text-xs text-content-subtle">
+                    <p className="text-content-subtle truncate text-xs">
                       {relative(settlement.date)}
                       {settlement.note ? ` · ${settlement.note}` : ''}
                     </p>
@@ -237,7 +237,7 @@ export function SettleDialog({ open, onOpenChange, group, prefill }: SettleDialo
                   <Money
                     cents={settlement.amount}
                     currency={settlement.currency}
-                    className="text-sm font-medium text-content"
+                    className="text-content text-sm font-medium"
                   />
                   <IconButton
                     label={t('deletePayment')}

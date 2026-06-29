@@ -1,21 +1,22 @@
 # ============================================================================
 #  Evenly — PRODUCTION compose
 #  App + PostgreSQL, bound to 127.0.0.1 only (put nginx in front for TLS).
-#  Mailpit/Adminer are NOT included here — production uses a real SMTP provider.
+#  App + PostgreSQL only — production uses a real SMTP provider (see .env).
 #  Required secrets are read from .env (compose fails fast if any are missing).
 # ============================================================================
 name: evenly
 
 services:
   db:
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-evenly}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set a strong POSTGRES_PASSWORD in .env}
       POSTGRES_DB: ${POSTGRES_DB:-evenly}
     volumes:
-      - db_data:/var/lib/postgresql/data
+      # Postgres 18+ stores data in a version subdir; mount one level up.
+      - db_data:/var/lib/postgresql
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-evenly} -d ${POSTGRES_DB:-evenly}']
       interval: 5s

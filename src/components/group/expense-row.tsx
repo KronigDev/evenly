@@ -73,18 +73,18 @@ export function ExpenseRow({ expense, currentMemberId, baseCurrency, onSelect }:
     <button
       type="button"
       onClick={() => onSelect(expense)}
-      className="flex w-full items-center gap-3 px-4 py-3 text-left outline-none transition-colors duration-100 ease-smooth hover:bg-surface-2 focus-visible:bg-surface-2"
+      className="ease-smooth hover:bg-surface-2 focus-visible:bg-surface-2 flex w-full items-center gap-3 px-4 py-3 text-left transition-colors duration-100 outline-none"
     >
       <CategoryIcon category={expense.category} size="md" />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-content">{expense.description}</p>
-        <p className="mt-0.5 truncate text-xs text-content-subtle">{relative(expense.date)}</p>
+        <p className="text-content truncate text-sm font-medium">{expense.description}</p>
+        <p className="text-content-subtle mt-0.5 truncate text-xs">{relative(expense.date)}</p>
       </div>
       <div className="flex flex-col items-end gap-0.5 text-right">
         <Money
           cents={expense.amount}
           currency={expense.currency}
-          className="text-sm font-medium text-content"
+          className="text-content text-sm font-medium"
         />
         <span className={cn('text-xs', shareToneClass[share.kind])}>{shareLabel()}</span>
       </div>

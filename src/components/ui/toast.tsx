@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { CheckCircle, Info, WarningCircle, X, XCircle } from '@phosphor-icons/react';
 import type { Icon } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils/cn';
@@ -102,7 +102,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {mounted
         ? createPortal(
             <div
-              className="pointer-events-none fixed inset-x-4 bottom-4 z-[60] flex flex-col items-stretch gap-2 sm:inset-x-auto sm:bottom-auto sm:right-4 sm:top-4 sm:w-[22rem] sm:items-end"
+              className="pointer-events-none fixed inset-x-4 bottom-4 z-[60] flex flex-col items-stretch gap-2 sm:inset-x-auto sm:top-4 sm:right-4 sm:bottom-auto sm:w-[22rem] sm:items-end"
               role="region"
               aria-label="Notifications"
             >
@@ -139,7 +139,7 @@ function ToastCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id: num
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: reduce ? 0 : 8, scale: reduce ? 1 : 0.97 }}
       transition={{ duration: reduce ? 0 : 0.22, ease: [0.16, 1, 0.3, 1] }}
-      className="pointer-events-auto flex w-full items-start gap-3 rounded-xl border border-hairline bg-surface px-4 py-3 shadow-pop sm:w-[22rem]"
+      className="border-hairline bg-surface shadow-pop pointer-events-auto flex w-full items-start gap-3 rounded-xl border px-4 py-3 sm:w-[22rem]"
     >
       {IconComponent ? (
         <IconComponent
@@ -149,16 +149,16 @@ function ToastCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id: num
         />
       ) : null}
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-content">{toast.message}</p>
+        <p className="text-content text-sm font-medium">{toast.message}</p>
         {toast.description ? (
-          <p className="mt-0.5 text-xs text-content-muted">{toast.description}</p>
+          <p className="text-content-muted mt-0.5 text-xs">{toast.description}</p>
         ) : null}
       </div>
       <button
         type="button"
         aria-label="Dismiss notification"
         onClick={() => onDismiss(toast.id)}
-        className="-mr-1 -mt-0.5 shrink-0 rounded-md p-1 text-content-subtle outline-none transition-colors hover:bg-surface-2 hover:text-content focus-visible:ring-2 focus-visible:ring-brand/55"
+        className="text-content-subtle hover:bg-surface-2 hover:text-content focus-visible:ring-brand/55 -mt-0.5 -mr-1 shrink-0 rounded-md p-1 transition-colors outline-none focus-visible:ring-2"
       >
         <X size={15} />
       </button>

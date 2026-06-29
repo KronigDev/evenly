@@ -4,6 +4,39 @@ All notable changes to Evenly are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] — 2026-06-29
+
+### Changed
+
+- **Upgraded the entire stack to the latest stable majors:** Next.js 16, React 19.2, TypeScript 6,
+  Tailwind CSS v4, Prisma 7, next-intl 4, zod 4, Vitest 4, Motion 12 (replacing framer-motion),
+  nodemailer 9, tailwind-merge 3, plus latest `@types/*`. Base images bumped to **Node 24** and
+  **PostgreSQL 18**.
+- **Prisma 7** now uses the **node-postgres driver adapter** (`@prisma/adapter-pg` + `pg`): the
+  connection URL moved out of the schema into `prisma.config.ts`, and the client is constructed with
+  an adapter (`src/lib/db.ts`).
+- **Tailwind v4**: PostCSS now uses `@tailwindcss/postcss`; `globals.css` imports Tailwind v4 and
+  bridges the existing token theme via `@config`.
+- **ESLint** migrated to flat config (`eslint.config.mjs`) using `eslint-config-next` 16's native
+  flat configs; `next lint` (removed in Next 16) replaced by `eslint .`.
+- **Motion**: imports switched from `framer-motion` to `motion/react` (the renamed package).
+
+### Removed
+
+- **Dropped Mailpit and Adminer** from the dev stack — it is now just **app + PostgreSQL**. With no
+  SMTP configured (dev default), outgoing emails and their links are printed to the app logs instead
+  of being sent.
+
+### Notes
+
+- ESLint is pinned to the latest **9.x** (not 10): `eslint-config-next` 16's bundled
+  `eslint-plugin-react` does not yet support ESLint 10.
+
+### Verified
+
+- `pnpm typecheck` / `pnpm lint` / `pnpm format:check` clean · 40 Vitest unit tests pass ·
+  `pnpm build` clean · `docker compose up` brings up app + PostgreSQL 18 and serves.
+
 ## [1.0.0] — 2026-06-29
 
 Initial release. A complete, production-ready, dockerized Splitwise-style expense-sharing app.
@@ -50,4 +83,5 @@ Initial release. A complete, production-ready, dockerized Splitwise-style expens
 - `pnpm build` clean · `docker compose up` brings up the full stack (migrate + seed + serve) · email
   delivery verified against Mailpit.
 
+[1.1.0]: https://github.com/KronigDev/evenly/releases/tag/v1.1.0
 [1.0.0]: https://github.com/KronigDev/evenly/releases/tag/v1.0.0

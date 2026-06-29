@@ -19,8 +19,9 @@ const schema = z.object({
     .string()
     .min(16, 'AUTH_SECRET must be at least 16 characters')
     .default('dev-only-insecure-secret-change-me-0123456789abcdef'),
-  SMTP_HOST: z.string().default('localhost'),
-  SMTP_PORT: z.coerce.number().int().positive().default(1025),
+  // Empty SMTP_HOST => "log mode" (emails are printed to the console, dev only).
+  SMTP_HOST: z.string().default(''),
+  SMTP_PORT: z.coerce.number().int().positive().default(587),
   SMTP_USER: z.string().optional().default(''),
   SMTP_PASS: z.string().optional().default(''),
   SMTP_SECURE: stringBool(false),

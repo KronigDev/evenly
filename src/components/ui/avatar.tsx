@@ -56,7 +56,7 @@ export function Avatar({ name, image, size = 'md', className }: AvatarProps) {
   return (
     <span
       className={cn(
-        'relative inline-flex shrink-0 select-none items-center justify-center overflow-hidden rounded-full font-medium ring-1 ring-black/[0.04] dark:ring-white/[0.06]',
+        'relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full font-medium ring-1 ring-black/[0.04] select-none dark:ring-white/[0.06]',
         sizeClass[size],
         !showImage && palette,
         className,

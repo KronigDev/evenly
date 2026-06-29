@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import { DownloadSimple, X } from '@phosphor-icons/react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -97,19 +97,19 @@ export function InstallPrompt() {
           transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
           role="dialog"
           aria-label={t('installTitle')}
-          className="fixed inset-x-0 bottom-0 z-50 px-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] sm:inset-x-auto sm:bottom-6 sm:right-6 sm:px-0 sm:pb-0"
+          className="fixed inset-x-0 bottom-0 z-50 px-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] sm:inset-x-auto sm:right-6 sm:bottom-6 sm:px-0 sm:pb-0"
         >
-          <div className="surface-card mx-auto flex w-full max-w-md items-start gap-3 p-4 shadow-pop sm:w-80">
+          <div className="surface-card shadow-pop mx-auto flex w-full max-w-md items-start gap-3 p-4 sm:w-80">
             <span
               aria-hidden="true"
-              className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand"
+              className="bg-brand/10 text-brand mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
             >
               <DownloadSimple weight="regular" className="h-5 w-5" />
             </span>
 
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold text-content">{t('installTitle')}</p>
-              <p className="mt-0.5 text-pretty text-xs leading-relaxed text-content-muted">
+              <p className="text-content text-sm font-semibold">{t('installTitle')}</p>
+              <p className="text-content-muted mt-0.5 text-xs leading-relaxed text-pretty">
                 {t('installBody')}
               </p>
 
@@ -127,7 +127,7 @@ export function InstallPrompt() {
               type="button"
               onClick={dismiss}
               aria-label={t('dismiss')}
-              className="-mr-1 -mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-content-subtle transition-colors hover:bg-surface-2 hover:text-content"
+              className="text-content-subtle hover:bg-surface-2 hover:text-content -mt-1 -mr-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition-colors"
             >
               <X weight="regular" className="h-4 w-4" />
             </button>

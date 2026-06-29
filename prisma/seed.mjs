@@ -10,11 +10,14 @@
 // Primary demo login: ada@evenly.app / password123
 // =============================================================================
 
+import 'dotenv/config';
 import crypto from 'node:crypto';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 import { hash } from '@node-rs/argon2';
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
 
 // Seed exchange rates as units-per-USD (mirrors src/lib/currency.ts SEED_RATES_PER_USD).
 const SEED_RATES_PER_USD = {

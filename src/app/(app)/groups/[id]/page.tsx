@@ -165,7 +165,7 @@ export default function GroupDetailPage() {
   ];
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 pb-24 pt-4 sm:pb-12">
+    <div className="mx-auto w-full max-w-3xl px-4 pt-4 pb-24 sm:pb-12">
       {/* Header */}
       <header className="space-y-4">
         <div className="flex items-start gap-3">
@@ -180,11 +180,11 @@ export default function GroupDetailPage() {
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="truncate text-xl font-semibold text-content">{group.name}</h1>
+              <h1 className="text-content truncate text-xl font-semibold">{group.name}</h1>
               {group.archived ? <Badge tone="neutral">{t('archived')}</Badge> : null}
             </div>
             {group.description ? (
-              <p className="mt-0.5 text-pretty text-sm text-content-muted">{group.description}</p>
+              <p className="text-content-muted mt-0.5 text-sm text-pretty">{group.description}</p>
             ) : null}
             <div className="mt-2 flex items-center gap-2">
               <div className="flex -space-x-2">
@@ -193,14 +193,14 @@ export default function GroupDetailPage() {
                     key={member.id}
                     member={member}
                     size="sm"
-                    className="rounded-full ring-2 ring-canvas"
+                    className="ring-canvas rounded-full ring-2"
                   />
                 ))}
               </div>
               {extraMembers > 0 ? (
-                <span className="text-xs text-content-muted">+{extraMembers}</span>
+                <span className="text-content-muted text-xs">+{extraMembers}</span>
               ) : null}
-              <span className="text-xs text-content-subtle">
+              <span className="text-content-subtle text-xs">
                 · {t('memberCount', { count: activeMembers.length })}
               </span>
             </div>
@@ -210,7 +210,7 @@ export default function GroupDetailPage() {
           <DropdownMenu>
             <DropdownMenuTrigger
               aria-label={t('menu')}
-              className="grid h-10 w-10 shrink-0 place-items-center rounded-lg text-content-muted outline-none transition-colors hover:bg-surface-2 focus-visible:ring-2 focus-visible:ring-brand/55"
+              className="text-content-muted hover:bg-surface-2 focus-visible:ring-brand/55 grid h-10 w-10 shrink-0 place-items-center rounded-lg transition-colors outline-none focus-visible:ring-2"
             >
               <DotsThree size={22} weight="bold" />
             </DropdownMenuTrigger>
@@ -268,7 +268,7 @@ export default function GroupDetailPage() {
         </div>
 
         {/* Your balance + primary actions */}
-        <div className="flex flex-col gap-3 rounded-xl border border-hairline bg-surface p-4 shadow-soft sm:flex-row sm:items-center sm:justify-between">
+        <div className="border-hairline bg-surface shadow-soft flex flex-col gap-3 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <p className="eyebrow">{t('yourSummary')}</p>
             <div className="mt-1 flex items-baseline gap-2">
@@ -283,7 +283,7 @@ export default function GroupDetailPage() {
                   className="text-lg"
                 />
               )}
-              <span className="text-sm text-content-muted">{yourNetLabel}</span>
+              <span className="text-content-muted text-sm">{yourNetLabel}</span>
             </div>
           </div>
           <div className="flex shrink-0 gap-2">
@@ -298,8 +298,8 @@ export default function GroupDetailPage() {
 
         {/* Archived banner */}
         {group.archived ? (
-          <div className="flex items-center justify-between gap-3 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3">
-            <p className="text-sm text-content">{t('archived')}</p>
+          <div className="border-warning/30 bg-warning/10 flex items-center justify-between gap-3 rounded-xl border px-4 py-3">
+            <p className="text-content text-sm">{t('archived')}</p>
             {isAdmin ? (
               <Button
                 variant="ghost"
@@ -316,7 +316,7 @@ export default function GroupDetailPage() {
       </header>
 
       {/* Tabs */}
-      <div className="sticky top-0 z-10 -mx-4 mt-4 bg-canvas/90 px-4 backdrop-blur supports-[backdrop-filter]:bg-canvas/70">
+      <div className="bg-canvas/90 supports-[backdrop-filter]:bg-canvas/70 sticky top-0 z-10 -mx-4 mt-4 px-4 backdrop-blur">
         <Tabs value={tab} onValueChange={setTab} items={tabItems} aria-label={t('title')} />
       </div>
 

@@ -42,18 +42,18 @@ export function MemberMultiSelect({
   }
 
   return (
-    <div className={cn('rounded-xl border border-hairline bg-surface', className)}>
+    <div className={cn('border-hairline bg-surface rounded-xl border', className)}>
       {showSelectAll ? (
-        <div className="border-b border-hairline">
+        <div className="border-hairline border-b">
           <Checkbox
             checked={allSelected}
             onChange={toggleAll}
             wrapperClassName="flex w-full items-center gap-3 px-3 py-2"
-            label={<span className="text-sm font-medium text-content">{t('everyone')}</span>}
+            label={<span className="text-content text-sm font-medium">{t('everyone')}</span>}
           />
         </div>
       ) : null}
-      <ul className="divide-y divide-hairline">
+      <ul className="divide-hairline divide-y">
         {members.map((member) => {
           const isChecked = selected.has(member.id);
           return (
@@ -68,9 +68,9 @@ export function MemberMultiSelect({
                 label={
                   <span className="flex min-w-0 items-center gap-2.5">
                     <MemberAvatar member={member} size="sm" />
-                    <span className="truncate text-sm text-content">{member.displayName}</span>
+                    <span className="text-content truncate text-sm">{member.displayName}</span>
                     {member.isYou ? (
-                      <span className="shrink-0 text-2xs font-medium uppercase tracking-eyebrow text-content-subtle">
+                      <span className="text-2xs tracking-eyebrow text-content-subtle shrink-0 font-medium uppercase">
                         {tc('you')}
                       </span>
                     ) : null}

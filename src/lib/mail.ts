@@ -4,7 +4,11 @@ import type { Locale } from '@/i18n/request';
 
 let transporter: Transporter | null = null;
 
-function getTransport(): Transporter {
+function getTransport(): Transporter | null {
+  // No SMTP host configured -> "log mode": emails (and their links) are printed
+  // to the server console instead of being sent. Used in local dev so no mail
+  // container is needed. Production sets a real SMTP_HOST.
+  if (!env.SMTP_HOST) return null;
   if (!transporter) {
     transporter = nodemailer.createTransport({
       host: env.SMTP_HOST,
@@ -24,7 +28,19 @@ export interface SendMailInput {
 }
 
 export async function sendMail({ to, subject, html, text }: SendMailInput): Promise<void> {
-  await getTransport().sendMail({ from: env.EMAIL_FROM, to, subject, html, text });
+  const transport = getTransport();
+  if (!transport) {
+    const link = text.match(/https?:\/\/\S+/)?.[0];
+    console.info(
+      `\n──────── Evenly mail (no SMTP configured — log mode) ────────\n` +
+        ` To:      ${to}\n` +
+        ` Subject: ${subject}\n` +
+        (link ? ` Link:    ${link}\n` : '') +
+        `─────────────────────────────────────────────────────────────\n`,
+    );
+    return;
+  }
+  await transport.sendMail({ from: env.EMAIL_FROM, to, subject, html, text });
 }
 
 // ---------------------------------------------------------------------------

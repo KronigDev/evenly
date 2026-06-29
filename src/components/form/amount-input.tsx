@@ -86,8 +86,8 @@ export const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>(functi
   return (
     <div
       className={cn(
-        'flex items-center overflow-hidden rounded-lg border border-hairline bg-surface shadow-soft transition-[border-color,box-shadow] duration-150 ease-smooth',
-        'focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/30',
+        'border-hairline bg-surface shadow-soft ease-smooth flex items-center overflow-hidden rounded-lg border transition-[border-color,box-shadow] duration-150',
+        'focus-within:border-brand focus-within:ring-brand/30 focus-within:ring-2',
         invalid && 'border-negative focus-within:border-negative focus-within:ring-negative/30',
         (disabled || readOnly) && 'opacity-90',
         sizeClass[size],
@@ -95,7 +95,7 @@ export const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>(functi
       )}
     >
       {hideSymbol ? null : (
-        <span className="tabular select-none pl-3 pr-1 font-mono text-xs text-content-subtle">
+        <span className="tabular text-content-subtle pr-1 pl-3 font-mono text-xs select-none">
           {symbol}
         </span>
       )}
@@ -113,8 +113,8 @@ export const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>(functi
         onFocus={handleFocus}
         onBlur={handleBlur}
         className={cn(
-          'tabular h-full w-full min-w-0 bg-transparent text-right font-mono text-content outline-none placeholder:text-content-subtle',
-          hideSymbol ? 'px-3' : 'pl-1 pr-3',
+          'tabular text-content placeholder:text-content-subtle h-full w-full min-w-0 bg-transparent text-right font-mono outline-none',
+          hideSymbol ? 'px-3' : 'pr-3 pl-1',
           readOnly && 'cursor-default',
           className,
         )}

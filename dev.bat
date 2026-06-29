@@ -5,7 +5,7 @@ title Evenly - Dev Steuerung
 
 REM ============================================================
 REM  Evenly - Dev-Launcher fuer den Docker-Stack
-REM  (App + PostgreSQL + Mailpit)
+REM  (App + PostgreSQL)
 REM ============================================================
 
 REM --- .env automatisch anlegen, falls nicht vorhanden ---------
@@ -37,9 +37,9 @@ for /f %%s in ('docker compose ps --services --status running 2^>nul') do set /a
 echo ============================================================
 echo                  E V E N L Y  -  Dev
 echo ============================================================
-echo   Laufende Dienste: !RUNCOUNT! / 3
+echo   Laufende Dienste: !RUNCOUNT! / 2
 echo   App:     http://localhost:3001
-echo   Mailpit: http://localhost:8025
+echo   E-Mails: docker compose logs -f app   (Invite/Magic-Link Links)
 echo ------------------------------------------------------------
 echo.
 echo   [1]  Starten             (Stack hochfahren, baut bei Bedarf)
@@ -49,7 +49,7 @@ echo   [4]  App neu starten
 echo   [5]  Logs anzeigen       (eigenes Fenster, mit STRG+C beenden)
 echo   [6]  Status
 echo   [7]  Datenbank zuruecksetzen   (Volumes loeschen + neu seeden)
-echo   [8]  Im Browser oeffnen  (App / Mailpit)
+echo   [8]  App im Browser oeffnen
 echo   [9]  ALLES loeschen      (Container + Volumes + Image)
 echo   [0]  Beenden
 echo.
@@ -137,9 +137,8 @@ goto menu
 
 :browser
 echo.
-echo Oeffne App und Mailpit im Browser...
+echo Oeffne die App im Browser...
 start "" http://localhost:3001
-start "" http://localhost:8025
 timeout /t 1 >nul
 goto menu
 
@@ -161,7 +160,7 @@ echo.
 echo ------------------------------------------------------------
 echo   Evenly laeuft:
 echo     App      ^> http://localhost:3001   (Login: ada@evenly.app / password123)
-echo     Mailpit  ^> http://localhost:8025   (alle E-Mails landen hier)
+echo     E-Mails  ^> docker compose logs -f app   (Invite/Magic-Link Links)
 echo ------------------------------------------------------------
 exit /b 0
 

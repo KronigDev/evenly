@@ -82,7 +82,7 @@ export function DonutChart({
       <div
         role="img"
         aria-label={label}
-        className="relative grid shrink-0 place-items-center motion-safe:animate-scale-in"
+        className="motion-safe:animate-scale-in relative grid shrink-0 place-items-center"
       >
         <svg viewBox="0 0 100 100" className="h-40 w-40 -rotate-90" aria-hidden="true">
           <circle
@@ -105,19 +105,19 @@ export function DonutChart({
               strokeLinecap="butt"
               strokeDasharray={`${mounted ? arc.dash : 0} ${CIRC}`}
               strokeDashoffset={arc.offset}
-              className="transition-[stroke-dasharray] duration-700 ease-smooth motion-reduce:transition-none"
+              className="ease-smooth transition-[stroke-dasharray] duration-700 motion-reduce:transition-none"
             />
           ))}
         </svg>
         <div className="absolute flex flex-col items-center text-center">
-          <span className="tabular font-mono text-lg font-semibold text-content">
+          <span className="tabular text-content font-mono text-lg font-semibold">
             {format(total)}
           </span>
           {centerLabel ? <span className="eyebrow mt-0.5">{centerLabel}</span> : null}
         </div>
       </div>
 
-      <ul className="flex w-full min-w-0 flex-col gap-2.5 motion-safe:animate-fade-up">
+      <ul className="motion-safe:animate-fade-up flex w-full min-w-0 flex-col gap-2.5">
         {arcs.map((arc, index) => (
           <li
             key={`${arc.datum.label}-${index}`}
@@ -129,13 +129,13 @@ export function DonutChart({
                 className="h-2.5 w-2.5 shrink-0 rounded-full"
                 style={{ backgroundColor: arc.color }}
               />
-              <span className="truncate text-content">{arc.datum.label}</span>
+              <span className="text-content truncate">{arc.datum.label}</span>
             </span>
             <span className="flex shrink-0 items-baseline gap-2">
-              <span className="tabular font-mono text-content-muted">
+              <span className="tabular text-content-muted font-mono">
                 {format(arc.datum.value)}
               </span>
-              <span className="tabular w-9 text-right text-2xs text-content-subtle">
+              <span className="tabular text-2xs text-content-subtle w-9 text-right">
                 {Math.round(arc.fraction * 100)}%
               </span>
             </span>

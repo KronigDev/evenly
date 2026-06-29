@@ -62,7 +62,7 @@ export function ActivityTab({ groupId }: ActivityTabProps) {
   if (query.isLoading) {
     return (
       <Card className="overflow-hidden">
-        <ul className="divide-y divide-hairline">
+        <ul className="divide-hairline divide-y">
           {Array.from({ length: 6 }).map((_, index) => (
             <li key={index} className="flex items-center gap-3 px-4 py-3">
               <Skeleton className="h-9 w-9 rounded-full" />
@@ -109,7 +109,7 @@ export function ActivityTab({ groupId }: ActivityTabProps) {
 
   return (
     <Card className="overflow-hidden">
-      <ul className="divide-y divide-hairline">
+      <ul className="divide-hairline divide-y">
         {items.map((activity) => (
           <li key={activity.id} className="flex items-center gap-3 px-4 py-3">
             <Avatar
@@ -117,8 +117,8 @@ export function ActivityTab({ groupId }: ActivityTabProps) {
               image={activity.actor?.image ?? null}
               size="sm"
             />
-            <p className="min-w-0 flex-1 text-sm text-content">{sentence(activity)}</p>
-            <span className="shrink-0 text-xs text-content-subtle">
+            <p className="text-content min-w-0 flex-1 text-sm">{sentence(activity)}</p>
+            <span className="text-content-subtle shrink-0 text-xs">
               {relative(activity.createdAt)}
             </span>
           </li>

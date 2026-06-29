@@ -12,7 +12,7 @@ export function Card({ interactive = false, className, ...props }: CardProps) {
       className={cn(
         'surface-card',
         interactive &&
-          'cursor-pointer transition-[transform,box-shadow] duration-200 ease-smooth hover:-translate-y-0.5 hover:shadow-card',
+          'ease-smooth hover:shadow-card cursor-pointer transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5',
         className,
       )}
       {...props}
@@ -23,7 +23,7 @@ export function Card({ interactive = false, className, ...props }: CardProps) {
 export function CardHeader({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('flex flex-col gap-1 border-b border-hairline px-5 py-4', className)}
+      className={cn('border-hairline flex flex-col gap-1 border-b px-5 py-4', className)}
       {...props}
     />
   );
@@ -36,7 +36,7 @@ export function CardBody({ className, ...props }: HTMLAttributes<HTMLDivElement>
 export function CardFooter({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('flex items-center gap-3 border-t border-hairline px-5 py-4', className)}
+      className={cn('border-hairline flex items-center gap-3 border-t px-5 py-4', className)}
       {...props}
     />
   );

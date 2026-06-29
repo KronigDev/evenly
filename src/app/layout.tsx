@@ -49,7 +49,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       suppressHydrationWarning
       className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
-      <body className="min-h-[100dvh] bg-canvas font-sans text-content antialiased">
+      <body className="bg-canvas text-content min-h-[100dvh] font-sans antialiased">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Providers>{children}</Providers>
           <ServiceWorkerRegistrar />

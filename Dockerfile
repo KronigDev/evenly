@@ -9,7 +9,7 @@
 #  runner → built app + node_modules (incl. Prisma CLI/engines for migrate)   #
 ###############################################################################
 
-FROM node:22-bookworm-slim AS base
+FROM node:24-bookworm-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -58,7 +58,7 @@ COPY --from=build /app/.next ./.next
 COPY --from=build /app/public ./public
 COPY --from=build /app/prisma ./prisma
 COPY --from=build /app/src ./src
-COPY --from=build /app/package.json /app/next.config.mjs ./
+COPY --from=build /app/package.json /app/next.config.mjs /app/prisma.config.ts ./
 COPY --chmod=755 docker/entrypoint.sh /app/docker/entrypoint.sh
 
 # Writable uploads volume + prisma dir (for the migration shadow/engine).

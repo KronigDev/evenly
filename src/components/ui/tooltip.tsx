@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { cn } from '@/lib/utils/cn';
 
 export type TooltipSide = 'top' | 'bottom' | 'left' | 'right';
@@ -81,7 +81,7 @@ export function Tooltip({ content, children, side = 'top', delay = 350, classNam
             exit={{ opacity: 0, ...offset }}
             transition={{ duration: reduce ? 0 : 0.14, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
-              'pointer-events-none absolute z-50 whitespace-nowrap rounded-md bg-ink px-2 py-1 text-xs font-medium text-ink-on shadow-pop',
+              'bg-ink text-ink-on shadow-pop pointer-events-none absolute z-50 rounded-md px-2 py-1 text-xs font-medium whitespace-nowrap',
               sidePositionClass[side],
               className,
             )}

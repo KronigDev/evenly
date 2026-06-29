@@ -138,16 +138,16 @@ export function ReceiptUploader({
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
         className={cn(
-          'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed px-4 py-6 text-center outline-none transition-colors duration-150 ease-smooth',
-          'focus-visible:ring-2 focus-visible:ring-brand/55',
+          'ease-smooth flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed px-4 py-6 text-center transition-colors duration-150 outline-none',
+          'focus-visible:ring-brand/55 focus-visible:ring-2',
           dragging
             ? 'border-brand bg-brand/5 text-content'
             : 'border-hairline-strong bg-surface-2/40 text-content-muted hover:bg-surface-2',
         )}
       >
         <UploadSimple size={22} aria-hidden="true" />
-        <span className="text-sm font-medium text-content">{t('attachReceipt')}</span>
-        <span className="text-xs text-content-subtle">PDF / JPG / PNG · ≤ 8 MB</span>
+        <span className="text-content text-sm font-medium">{t('attachReceipt')}</span>
+        <span className="text-content-subtle text-xs">PDF / JPG / PNG · ≤ 8 MB</span>
         <input
           ref={inputRef}
           type="file"
@@ -162,7 +162,7 @@ export function ReceiptUploader({
       </div>
 
       {uploading > 0 ? (
-        <p className="flex items-center gap-2 text-xs text-content-muted">
+        <p className="text-content-muted flex items-center gap-2 text-xs">
           <Spinner size="xs" />
           {tc('saving')}
         </p>
@@ -210,11 +210,11 @@ interface TileShellProps {
 
 function TileShell({ preview, name, busy, onRemove, removeLabel }: TileShellProps) {
   return (
-    <li className="group relative overflow-hidden rounded-xl border border-hairline bg-surface">
-      <div className="flex h-24 items-center justify-center bg-surface-2 text-content-subtle">
+    <li className="group border-hairline bg-surface relative overflow-hidden rounded-xl border">
+      <div className="bg-surface-2 text-content-subtle flex h-24 items-center justify-center">
         {preview}
       </div>
-      <p className="truncate px-2 py-1.5 text-xs text-content-muted" title={name}>
+      <p className="text-content-muted truncate px-2 py-1.5 text-xs" title={name}>
         {name}
       </p>
       <IconButton
@@ -223,7 +223,7 @@ function TileShell({ preview, name, busy, onRemove, removeLabel }: TileShellProp
         variant="secondary"
         onClick={onRemove}
         disabled={busy}
-        className="absolute right-1.5 top-1.5 h-7 w-7 opacity-90"
+        className="absolute top-1.5 right-1.5 h-7 w-7 opacity-90"
       >
         {busy ? <Spinner size="xs" /> : <Trash size={15} aria-hidden="true" />}
       </IconButton>

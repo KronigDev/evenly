@@ -97,7 +97,7 @@ export function GroupCard({ group, className }: GroupCardProps) {
     <Link
       href={`/groups/${group.id}`}
       className={cn(
-        'block rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas',
+        'focus-visible:ring-brand/55 focus-visible:ring-offset-canvas block rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
         className,
       )}
     >
@@ -113,8 +113,8 @@ export function GroupCard({ group, className }: GroupCardProps) {
             {group.emoji ? <span>{group.emoji}</span> : <UsersThree size={20} />}
           </span>
           <div className="min-w-0 flex-1">
-            <h3 className="truncate font-semibold text-content">{group.name}</h3>
-            <p className="mt-0.5 text-xs text-content-muted">
+            <h3 className="text-content truncate font-semibold">{group.name}</h3>
+            <p className="text-content-muted mt-0.5 text-xs">
               {t('groups.memberCount', { count: group.memberCount })}
             </p>
           </div>
@@ -122,9 +122,9 @@ export function GroupCard({ group, className }: GroupCardProps) {
         </div>
 
         <div className="mt-auto flex items-end justify-between gap-3">
-          <span className="text-xs text-content-muted">{label}</span>
+          <span className="text-content-muted text-xs">{label}</span>
           {settled ? (
-            <span aria-hidden="true" className="text-sm font-medium text-content-subtle">
+            <span aria-hidden="true" className="text-content-subtle text-sm font-medium">
               —
             </span>
           ) : (

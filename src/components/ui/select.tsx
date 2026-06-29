@@ -15,7 +15,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
     <div className="relative">
       <select
         ref={ref}
-        className={cn(controlBaseClass, 'h-10 cursor-pointer appearance-none pl-3 pr-9', className)}
+        className={cn(controlBaseClass, 'h-10 cursor-pointer appearance-none pr-9 pl-3', className)}
         {...props}
       >
         {children}
@@ -24,7 +24,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
         size={16}
         weight="bold"
         aria-hidden="true"
-        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-content-subtle"
+        className="text-content-subtle pointer-events-none absolute top-1/2 right-3 -translate-y-1/2"
       />
     </div>
   );

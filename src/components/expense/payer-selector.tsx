@@ -94,9 +94,9 @@ export function PayerSelector({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-sm font-medium text-content">{t('whoPaid')}</span>
+        <span className="text-content text-sm font-medium">{t('whoPaid')}</span>
         <label className="inline-flex cursor-pointer items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 text-xs text-content-muted">
+          <span className="text-content-muted inline-flex items-center gap-1.5 text-xs">
             <UsersThree size={15} aria-hidden="true" />
             {t('multiplePayers')}
           </span>
@@ -110,14 +110,14 @@ export function PayerSelector({
 
       {multiple ? (
         <div className="space-y-1.5">
-          <ul className="divide-y divide-hairline overflow-hidden rounded-xl border border-hairline bg-surface">
+          <ul className="divide-hairline border-hairline bg-surface divide-y overflow-hidden rounded-xl border">
             {members.map((member) => (
               <li key={member.id} className="flex items-center justify-between gap-3 px-3 py-2">
                 <span className="flex min-w-0 items-center gap-2.5">
                   <MemberAvatar member={member} size="sm" />
-                  <span className="truncate text-sm text-content">{member.displayName}</span>
+                  <span className="text-content truncate text-sm">{member.displayName}</span>
                   {member.isYou ? (
-                    <span className="shrink-0 text-2xs font-medium uppercase tracking-eyebrow text-content-subtle">
+                    <span className="text-2xs tracking-eyebrow text-content-subtle shrink-0 font-medium uppercase">
                       {tc('you')}
                     </span>
                   ) : null}

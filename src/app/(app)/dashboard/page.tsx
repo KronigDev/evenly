@@ -48,7 +48,7 @@ const ACTIVITY_MESSAGE_KEY: Record<string, string> = {
 function SectionHeading({ title, action }: { title: string; action?: ReactNode }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <h2 className="text-lg font-semibold tracking-tight text-content">{title}</h2>
+      <h2 className="text-content text-lg font-semibold tracking-tight">{title}</h2>
       {action}
     </div>
   );
@@ -89,8 +89,8 @@ function ActivityRow({ activity }: { activity: ActivityDTO }) {
     <li className="flex items-center gap-3 px-4 py-3">
       <Avatar name={actor || '?'} image={activity.actor?.image ?? null} size="sm" />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm text-content">{text}</p>
-        <p className="truncate text-xs text-content-subtle">
+        <p className="text-content truncate text-sm">{text}</p>
+        <p className="text-content-subtle truncate text-xs">
           {relative}
           {activity.groupName ? ` · ${ta('in', { group: activity.groupName })}` : ''}
         </p>
@@ -229,7 +229,7 @@ export default function DashboardPage() {
           action={
             <Link
               href="/activity"
-              className="inline-flex items-center gap-1 rounded-md text-sm font-medium text-content-muted outline-none transition-colors hover:text-content focus-visible:ring-2 focus-visible:ring-brand/55"
+              className="text-content-muted hover:text-content focus-visible:ring-brand/55 inline-flex items-center gap-1 rounded-md text-sm font-medium transition-colors outline-none focus-visible:ring-2"
             >
               {t('viewActivity')}
               <ArrowRight size={14} aria-hidden="true" />
@@ -237,7 +237,7 @@ export default function DashboardPage() {
           }
         />
         {activityQuery.isLoading ? (
-          <Card className="divide-y divide-hairline overflow-hidden">
+          <Card className="divide-hairline divide-y overflow-hidden">
             {[0, 1, 2, 3].map((i) => (
               <div key={i} className="flex items-center gap-3 px-4 py-3">
                 <Skeleton className="h-8 w-8 rounded-full" />
@@ -259,7 +259,7 @@ export default function DashboardPage() {
           />
         ) : (
           <Card>
-            <ul className="divide-y divide-hairline">
+            <ul className="divide-hairline divide-y">
               {recent.map((activity) => (
                 <ActivityRow key={activity.id} activity={activity} />
               ))}

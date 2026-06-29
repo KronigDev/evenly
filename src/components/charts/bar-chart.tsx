@@ -56,18 +56,18 @@ export function BarChart({ data, currency, className, 'aria-label': ariaLabel }:
           return (
             <li key={`${datum.label}-${index}`} className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between gap-3 text-sm">
-                <span className="flex min-w-0 items-center gap-2 text-content">
+                <span className="text-content flex min-w-0 items-center gap-2">
                   {datum.leading}
                   <span className="truncate">{datum.label}</span>
                 </span>
-                <span className="tabular shrink-0 font-mono text-content-muted">
+                <span className="tabular text-content-muted shrink-0 font-mono">
                   {format(datum.value)}
                 </span>
               </div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-surface-3">
+              <div className="bg-surface-3 h-2 w-full overflow-hidden rounded-full">
                 <div
                   className={cn(
-                    'h-full rounded-full transition-[width] duration-700 ease-smooth motion-reduce:transition-none',
+                    'ease-smooth h-full rounded-full transition-[width] duration-700 motion-reduce:transition-none',
                     !datum.color && 'bg-brand',
                   )}
                   style={{

@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@config '../../tailwind.config.ts';
 
 /* ============================================================================
    Design tokens — warm monochrome surfaces, emerald brand/positive accent,
@@ -115,17 +114,17 @@
 @layer components {
   /* Small uppercase section label. */
   .eyebrow {
-    @apply text-2xs font-medium uppercase tracking-eyebrow text-content-subtle;
+    @apply text-2xs tracking-eyebrow text-content-subtle font-medium uppercase;
   }
 
   /* Hairline-bordered surface used for most cards. */
   .surface-card {
-    @apply rounded-xl border border-hairline bg-surface shadow-soft;
+    @apply border-hairline bg-surface shadow-soft rounded-xl border;
   }
 
   /* Skeleton shimmer used for loading states. */
   .skeleton {
-    @apply relative overflow-hidden rounded-md bg-surface-2;
+    @apply bg-surface-2 relative overflow-hidden rounded-md;
   }
   .skeleton::after {
     @apply absolute inset-0;

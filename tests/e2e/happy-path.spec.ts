@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 /**
- * Happy-path E2E against a running Evenly instance (app + Postgres + Mailpit).
+ * Happy-path E2E against a running Evenly instance (app + Postgres).
  * Covers: register → dashboard → create group → add a split expense, and
  * signing in as the seeded demo account to see balances.
  */

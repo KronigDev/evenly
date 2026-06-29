@@ -98,7 +98,7 @@ function LoginForm() {
           {t('noAccount')}{' '}
           <Link
             href={withNext('/register', next)}
-            className="font-medium text-content underline-offset-4 transition-colors hover:text-brand hover:underline"
+            className="text-content hover:text-brand font-medium underline-offset-4 transition-colors hover:underline"
           >
             {t('signUp')}
           </Link>
@@ -109,7 +109,7 @@ function LoginForm() {
         {formError ? (
           <p
             role="alert"
-            className="rounded-lg border border-negative/30 bg-negative/10 px-3 py-2 text-sm text-negative"
+            className="border-negative/30 bg-negative/10 text-negative rounded-lg border px-3 py-2 text-sm"
           >
             {formError}
           </p>
@@ -133,7 +133,7 @@ function LoginForm() {
             <Label htmlFor="login-password">{t('passwordLabel')}</Label>
             <Link
               href={withNext('/forgot-password', next)}
-              className="text-xs font-medium text-content-muted underline-offset-4 transition-colors hover:text-content hover:underline"
+              className="text-content-muted hover:text-content text-xs font-medium underline-offset-4 transition-colors hover:underline"
             >
               {t('forgotPassword')}
             </Link>
@@ -149,7 +149,7 @@ function LoginForm() {
             aria-describedby={passwordError ? 'login-password-error' : undefined}
           />
           {passwordError ? (
-            <p id="login-password-error" className="text-xs text-negative">
+            <p id="login-password-error" className="text-negative text-xs">
               {passwordError}
             </p>
           ) : null}
@@ -161,11 +161,11 @@ function LoginForm() {
       </form>
 
       <div className="my-5 flex items-center gap-3">
-        <span className="h-px flex-1 bg-hairline" />
-        <span className="text-2xs font-medium uppercase tracking-eyebrow text-content-subtle">
+        <span className="bg-hairline h-px flex-1" />
+        <span className="text-2xs tracking-eyebrow text-content-subtle font-medium uppercase">
           {tc('or')}
         </span>
-        <span className="h-px flex-1 bg-hairline" />
+        <span className="bg-hairline h-px flex-1" />
       </div>
 
       <Button asChild variant="secondary" size="lg" fullWidth>

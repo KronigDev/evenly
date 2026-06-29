@@ -45,13 +45,13 @@ export default function EditExpensePage() {
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-6 sm:py-8">
       <div className="mb-5">
-        <Button asChild variant="ghost" size="sm" className="-ml-2 mb-3 text-content-muted">
+        <Button asChild variant="ghost" size="sm" className="text-content-muted mb-3 -ml-2">
           <Link href={`/groups/${groupId}`}>
             <ArrowLeft size={16} aria-hidden="true" />
             {tc('back')}
           </Link>
         </Button>
-        <h1 className="text-xl font-semibold text-content">{t('editExpense')}</h1>
+        <h1 className="text-content text-xl font-semibold">{t('editExpense')}</h1>
       </div>
 
       {loading ? (
@@ -59,7 +59,7 @@ export default function EditExpensePage() {
       ) : failed || !group || !expense ? (
         <p
           role="alert"
-          className="rounded-lg border border-negative/30 bg-negative/10 px-4 py-3 text-sm text-negative"
+          className="border-negative/30 bg-negative/10 text-negative rounded-lg border px-4 py-3 text-sm"
         >
           {te('generic')}
         </p>

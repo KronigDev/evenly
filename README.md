@@ -87,11 +87,12 @@ docker compose -f docker-compose.prod.yml up -d --build
 
 ### App (`src/app`, `src/components`, `src/lib`)
 
-- **Next.js 15** (App Router) + **React 19** + **TypeScript** (strict, `noUncheckedIndexedAccess`).
-- **Tailwind CSS v3** with a CSS-variable token system tuned for equal light / dark parity.
+- **Next.js 16** (App Router) + **React 19** + **TypeScript 6** (strict, `noUncheckedIndexedAccess`).
+- **Tailwind CSS v4** with a CSS-variable token system tuned for equal light / dark parity.
 - **Custom auth** — argon2 (`@node-rs/argon2`) password hashing, DB-backed httpOnly sessions,
   magic-link / email-verification / password-reset tokens, double-submit CSRF, rate limiting.
-- **Prisma + PostgreSQL**, integer-cents money model; a pure, property-tested split + debt engine.
+- **Prisma 7 + PostgreSQL** (node-postgres driver adapter), integer-cents money model; a pure,
+  property-tested split + debt engine.
 - **next-intl** cookie-based i18n (German + English), **TanStack Query**, **framer-motion**,
   **Phosphor** icons, self-hosted **Geist** fonts.
 - **nodemailer** for email; **pdf-lib** for PDF export; installable **PWA** (manifest + service worker).
@@ -99,7 +100,7 @@ docker compose -f docker-compose.prod.yml up -d --build
 ### Infrastructure
 
 - **Docker** (multi-stage `Dockerfile`) running the built app + Prisma migrations on start.
-- `docker-compose.yml` (development: app + PostgreSQL + **Mailpit** mail catcher) and
+- `docker-compose.yml` (development: app + PostgreSQL; emails are printed to the logs) and
   `docker-compose.prod.yml` (production: app + PostgreSQL, localhost-bound).
 - **GitHub Actions**: a CI workflow (lint / typecheck / test / build) and a self-hosted
   push-to-`main` Auto-Deploy workflow.
@@ -112,7 +113,7 @@ Evenly is a self-contained app: a Next.js front-end, its own API (Route Handlers
 database. There is no third-party backend and no payment integration.
 
 ```
-Next.js 15 (App Router, RSC) ── React 19 + Tailwind design system (light/dark tokens)
+Next.js 16 (App Router, RSC) ── React 19 + Tailwind v4 design system (light/dark tokens)
         │
         ├─ Route Handlers (/src/app/api/**) ── zod-validated, CSRF-protected, rate-limited
         │     └─ service layer (/src/lib): auth · invites · expenses · settlements · balances
@@ -121,7 +122,7 @@ Next.js 15 (App Router, RSC) ── React 19 + Tailwind design system (light/dar
         │
         ├─ Custom auth: argon2 hashing, DB-backed httpOnly sessions, magic-link / verify /
         │   reset tokens, double-submit CSRF, per-instance rate limiting
-        ├─ Email: nodemailer → Mailpit (dev) / any SMTP (prod), localized templates
+        ├─ Email: nodemailer → console log (dev) / any SMTP (prod), localized templates
         ├─ i18n: next-intl, cookie-based locale (en/de), all strings externalized
         └─ PWA: manifest + service worker + offline fallback + install prompt
 ```
@@ -240,7 +241,7 @@ APP_PORT=3000
 # Session/CSRF signing secret — generate with: openssl rand -hex 32
 AUTH_SECRET=<64-hex-chars>
 
-# Real SMTP provider (Mailpit is dev-only). Example: Resend / Postmark / SES.
+# Real SMTP provider (in dev, an empty SMTP_HOST logs emails). Example: Resend / Postmark / SES.
 SMTP_HOST=smtp.your-provider.com
 SMTP_PORT=587
 SMTP_USER=<smtp-user>
@@ -331,8 +332,8 @@ sudo certbot --nginx -d evenly.your-domain.com
 | `APP_URL` / `NEXT_PUBLIC_APP_URL`     | Public base URL — used to build links in emails. **Required in prod.**              | `https://evenly.example.com`           |
 | `APP_PORT`                            | Host port the app is published on (prod binds it to `127.0.0.1`).                   | `3000`                                 |
 | `AUTH_SECRET`                         | Session/CSRF signing secret. **Set a long random value** (`openssl rand -hex 32`).  | `<64 hex chars>`                       |
-| `SMTP_HOST` / `SMTP_PORT`             | SMTP server. Dev uses Mailpit; prod uses a real provider.                           | `smtp.resend.com` / `587`              |
-| `SMTP_USER` / `SMTP_PASS`             | SMTP credentials (leave empty for Mailpit).                                         | `resend` / `re_…`                      |
+| `SMTP_HOST` / `SMTP_PORT`             | SMTP server. **Empty in dev** (emails are logged); a real provider in prod.         | `smtp.resend.com` / `587`              |
+| `SMTP_USER` / `SMTP_PASS`             | SMTP credentials (empty in dev).                                                    | `resend` / `re_…`                      |
 | `SMTP_SECURE`                         | `true` only for implicit TLS on connect (port 465).                                 | `false`                                |
 | `EMAIL_FROM`                          | From header for outgoing mail.                                                      | `Evenly <no-reply@example.com>`        |
 | `EXCHANGE_RATE_API_URL` / `…_API_KEY` | Optional. Refresh FX rates from a provider; otherwise bundled rates are used.       | _(empty)_                              |
@@ -505,30 +506,32 @@ This keeps `main` and `dev` green; the self-hosted **Deploy** workflow only runs
 
 The fastest way on **Windows** is **`dev.bat`** (double-click): it creates `.env` on first run,
 checks Docker, and gives you a menu to start / rebuild / stop / reset the **dockerised dev stack**
-(app + PostgreSQL + Mailpit) — the app comes up on **http://localhost:3001** with demo data seeded.
+(app + PostgreSQL) — the app comes up on **http://localhost:3001** with demo data seeded.
 
 Cross-platform with Docker:
 
 ```bash
 cp .env.example .env
-docker compose up -d            # app :3001, Postgres :5432, Mailpit :8025
+docker compose up -d            # app :3001, Postgres :5432
 ```
 
 - **App** → http://localhost:3001 (demo login `ada@evenly.app` / `password123`)
-- **Mailpit** (all outgoing email) → http://localhost:8025
+- **Emails** → printed to the app logs: `docker compose logs -f app` (invite / magic-link / reset
+  links appear there — dev needs no mail server)
 
 Native dev with **Node 20.9+** (Node 24 recommended) + **pnpm**:
 
 ```bash
 pnpm install
-docker compose up -d db mailpit         # just the infra
+docker compose up -d db                  # just the database
 cp .env.example .env
 pnpm prisma migrate deploy && pnpm prisma:seed
-pnpm dev                                # hot-reload dev server on http://localhost:3001
+pnpm dev                                 # hot-reload dev server on http://localhost:3001
 ```
 
-> The dev stack uses Mailpit as a mail catcher — open every invite / magic-link / reset email at
-> http://localhost:8025. Production uses a real SMTP provider instead.
+> In dev, `SMTP_HOST` is empty, so Evenly prints every outgoing email (with its link) to the console
+> instead of sending it — grab magic-link / invite links from the logs. Production uses a real SMTP
+> provider instead.
 
 ---
 

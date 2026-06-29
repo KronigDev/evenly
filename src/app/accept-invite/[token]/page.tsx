@@ -18,7 +18,7 @@ interface GroupBrief {
 async function InviteShell({ children }: { children: ReactNode }) {
   const tc = await getTranslations('common');
   return (
-    <div className="relative flex min-h-[100dvh] flex-col bg-canvas">
+    <div className="bg-canvas relative flex min-h-[100dvh] flex-col">
       <div
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 -z-10"
@@ -29,10 +29,10 @@ async function InviteShell({ children }: { children: ReactNode }) {
       />
       <header className="flex items-center justify-between gap-3 px-5 py-5 sm:px-8 sm:py-6">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-base font-semibold text-ink-on shadow-soft">
+          <span className="bg-brand text-ink-on shadow-soft flex h-9 w-9 items-center justify-center rounded-xl text-base font-semibold">
             E
           </span>
-          <span className="text-[17px] font-semibold tracking-tight text-content">
+          <span className="text-content text-[17px] font-semibold tracking-tight">
             {tc('appName')}
           </span>
         </div>
@@ -41,8 +41,8 @@ async function InviteShell({ children }: { children: ReactNode }) {
           <ThemeToggle />
         </div>
       </header>
-      <main className="flex flex-1 items-center justify-center px-5 pb-16 pt-2 sm:pb-24">
-        <div className="w-full max-w-[400px] animate-fade-up">{children}</div>
+      <main className="flex flex-1 items-center justify-center px-5 pt-2 pb-16 sm:pb-24">
+        <div className="animate-fade-up w-full max-w-[400px]">{children}</div>
       </main>
       <footer className="px-5 pb-8 text-center sm:pb-10">
         <p className="text-2xs text-content-subtle">{tc('tagline')}</p>
@@ -53,14 +53,14 @@ async function InviteShell({ children }: { children: ReactNode }) {
 
 function GroupBadge({ group }: { group: GroupBrief }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-hairline bg-surface-2 p-3.5">
+    <div className="border-hairline bg-surface-2 flex items-center gap-3 rounded-xl border p-3.5">
       <span
         aria-hidden="true"
-        className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-surface text-2xl shadow-soft"
+        className="bg-surface shadow-soft grid h-12 w-12 shrink-0 place-items-center rounded-xl text-2xl"
       >
         {group.emoji ?? '💸'}
       </span>
-      <span className="min-w-0 truncate text-base font-semibold text-content">{group.name}</span>
+      <span className="text-content min-w-0 truncate text-base font-semibold">{group.name}</span>
     </div>
   );
 }
@@ -92,11 +92,11 @@ export default async function AcceptInvitePage({ params }: { params: Promise<{ t
             {user ? (
               <div className="space-y-3">
                 <AcceptInviteButton token={token} groupName={group.name} />
-                <p className="text-center text-xs text-content-subtle">
+                <p className="text-content-subtle text-center text-xs">
                   {user.email} ·{' '}
                   <Link
                     href={loginHref}
-                    className="text-content-muted underline-offset-4 transition-colors hover:text-content hover:underline"
+                    className="text-content-muted hover:text-content underline-offset-4 transition-colors hover:underline"
                   >
                     {ta('backToSignIn')}
                   </Link>

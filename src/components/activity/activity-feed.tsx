@@ -93,8 +93,8 @@ function ActivityRow({
     <li className="flex items-start gap-3 px-4 py-3.5 sm:px-5">
       <Avatar name={actorName} image={item.actor?.image} size="sm" className="mt-0.5" />
       <div className="min-w-0 flex-1">
-        <p className="text-pretty text-sm text-content">{sentence}</p>
-        <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-2xs text-content-subtle">
+        <p className="text-content text-sm text-pretty">{sentence}</p>
+        <div className="text-2xs text-content-subtle mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
           <time dateTime={item.createdAt}>
             {formatDistanceToNowStrict(date, { addSuffix: true, locale: dateLocale })}
           </time>
@@ -130,7 +130,7 @@ export function ActivityFeed({ items, groupId, showGroup = true, className }: Ac
 
   if (selfFetch && query.isLoading) {
     return (
-      <div className={cn('surface-card divide-y divide-hairline', className)}>
+      <div className={cn('surface-card divide-hairline divide-y', className)}>
         {[0, 1, 2, 3, 4].map((row) => (
           <div key={row} className="flex items-start gap-3 px-4 py-3.5 sm:px-5">
             <Skeleton className="h-8 w-8 shrink-0 rounded-full" />
@@ -194,7 +194,7 @@ export function ActivityFeed({ items, groupId, showGroup = true, className }: Ac
       {days.map((day) => (
         <section key={day.key} aria-label={day.label}>
           <h2 className="eyebrow mb-2 px-1">{day.label}</h2>
-          <ul className="surface-card divide-y divide-hairline">
+          <ul className="surface-card divide-hairline divide-y">
             {day.entries.map((entry) => (
               <ActivityRow
                 key={entry.id}

@@ -155,9 +155,9 @@ export function CreateGroupDialog({ open, onOpenChange }: CreateGroupDialogProps
                     aria-label={value}
                     onClick={() => setEmoji(active ? null : value)}
                     className={cn(
-                      'grid h-10 w-10 place-items-center rounded-lg border text-lg leading-none outline-none transition-colors duration-150 ease-smooth focus-visible:ring-2 focus-visible:ring-brand/55',
+                      'ease-smooth focus-visible:ring-brand/55 grid h-10 w-10 place-items-center rounded-lg border text-lg leading-none transition-colors duration-150 outline-none focus-visible:ring-2',
                       active
-                        ? 'border-brand bg-brand/10 ring-2 ring-brand/40'
+                        ? 'border-brand bg-brand/10 ring-brand/40 ring-2'
                         : 'border-hairline bg-surface-2 hover:bg-surface-3',
                     )}
                   >
@@ -181,9 +181,9 @@ export function CreateGroupDialog({ open, onOpenChange }: CreateGroupDialogProps
                     aria-label={option.key}
                     onClick={() => setColor(option.key)}
                     className={cn(
-                      'h-8 w-8 rounded-full outline-none ring-2 ring-offset-2 ring-offset-surface transition-shadow duration-150 ease-smooth focus-visible:ring-brand/70',
+                      'ring-offset-surface ease-smooth focus-visible:ring-brand/70 h-8 w-8 rounded-full ring-2 ring-offset-2 transition-shadow duration-150 outline-none',
                       option.swatch,
-                      active ? 'ring-content/60' : 'ring-transparent hover:ring-hairline-strong',
+                      active ? 'ring-content/60' : 'hover:ring-hairline-strong ring-transparent',
                     )}
                   />
                 );
@@ -201,10 +201,10 @@ export function CreateGroupDialog({ open, onOpenChange }: CreateGroupDialogProps
             </Select>
           </Field>
 
-          <div className="flex items-start justify-between gap-4 rounded-lg border border-hairline bg-surface-2 p-3.5">
+          <div className="border-hairline bg-surface-2 flex items-start justify-between gap-4 rounded-lg border p-3.5">
             <div className="min-w-0">
               <Label htmlFor="create-group-simplify">{t('simplifyDebts')}</Label>
-              <p className="mt-0.5 text-xs text-content-muted">{t('simplifyDebtsHint')}</p>
+              <p className="text-content-muted mt-0.5 text-xs">{t('simplifyDebtsHint')}</p>
             </div>
             <Switch
               id="create-group-simplify"

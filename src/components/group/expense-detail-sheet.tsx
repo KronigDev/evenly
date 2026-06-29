@@ -145,8 +145,8 @@ export function ExpenseDetailSheet({
             <div className="flex items-start gap-3">
               <CategoryIcon category={active.category} size="lg" />
               <div className="min-w-0 flex-1">
-                <h3 className="text-base font-semibold text-content">{active.description}</h3>
-                <p className="mt-0.5 text-xs text-content-subtle">
+                <h3 className="text-content text-base font-semibold">{active.description}</h3>
+                <p className="text-content-subtle mt-0.5 text-xs">
                   {tCat(categoryMeta(active.category).key)} · {relative(active.date)}
                 </p>
               </div>
@@ -154,10 +154,10 @@ export function ExpenseDetailSheet({
                 <Money
                   cents={active.amount}
                   currency={active.currency}
-                  className="text-base font-semibold text-content"
+                  className="text-content text-base font-semibold"
                 />
                 {showConverted ? (
-                  <p className="mt-0.5 text-xs text-content-subtle">
+                  <p className="text-content-subtle mt-0.5 text-xs">
                     {t('convertedAmount', {
                       amount: formatMoney(active.amountBase, baseCurrency, locale),
                       currency: baseCurrency,
@@ -170,17 +170,17 @@ export function ExpenseDetailSheet({
             {/* Paid by */}
             <section className="space-y-2">
               <p className="eyebrow">{t('paidBy')}</p>
-              <ul className="divide-y divide-hairline overflow-hidden rounded-xl border border-hairline">
+              <ul className="divide-hairline border-hairline divide-y overflow-hidden rounded-xl border">
                 {active.payers.map((payer) => (
                   <li key={payer.memberId} className="flex items-center gap-3 px-3 py-2.5">
                     <MemberAvatar member={memberLike(payer.memberId)} size="sm" />
-                    <span className="min-w-0 flex-1 truncate text-sm text-content">
+                    <span className="text-content min-w-0 flex-1 truncate text-sm">
                       {memberName(payer.memberId)}
                     </span>
                     <Money
                       cents={payer.paidAmount}
                       currency={baseCurrency}
-                      className="text-sm font-medium text-content"
+                      className="text-content text-sm font-medium"
                     />
                   </li>
                 ))}
@@ -190,17 +190,17 @@ export function ExpenseDetailSheet({
             {/* Split breakdown */}
             <section className="space-y-2">
               <p className="eyebrow">{t('splitBetween')}</p>
-              <ul className="divide-y divide-hairline overflow-hidden rounded-xl border border-hairline">
+              <ul className="divide-hairline border-hairline divide-y overflow-hidden rounded-xl border">
                 {active.splits.map((split) => (
                   <li key={split.memberId} className="flex items-center gap-3 px-3 py-2.5">
                     <MemberAvatar member={memberLike(split.memberId)} size="sm" />
-                    <span className="min-w-0 flex-1 truncate text-sm text-content">
+                    <span className="text-content min-w-0 flex-1 truncate text-sm">
                       {memberName(split.memberId)}
                     </span>
                     <Money
                       cents={split.owedAmount}
                       currency={baseCurrency}
-                      className="text-sm text-content-muted"
+                      className="text-content-muted text-sm"
                     />
                   </li>
                 ))}
@@ -211,7 +211,7 @@ export function ExpenseDetailSheet({
             {active.note ? (
               <section className="space-y-1.5">
                 <p className="eyebrow">{t('notes')}</p>
-                <p className="whitespace-pre-wrap text-sm text-content-muted">{active.note}</p>
+                <p className="text-content-muted text-sm whitespace-pre-wrap">{active.note}</p>
               </section>
             ) : null}
 
@@ -226,7 +226,7 @@ export function ExpenseDetailSheet({
                       href={attachment.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group relative block aspect-square overflow-hidden rounded-lg border border-hairline bg-surface-2"
+                      className="group border-hairline bg-surface-2 relative block aspect-square overflow-hidden rounded-lg border"
                       title={attachment.fileName}
                     >
                       {attachment.mimeType.startsWith('image/') ? (
@@ -234,12 +234,12 @@ export function ExpenseDetailSheet({
                         <img
                           src={attachment.url}
                           alt={attachment.fileName}
-                          className="h-full w-full object-cover transition-transform duration-200 ease-smooth group-hover:scale-105"
+                          className="ease-smooth h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
                         />
                       ) : (
-                        <span className="flex h-full w-full flex-col items-center justify-center gap-1 p-2 text-center text-content-muted">
+                        <span className="text-content-muted flex h-full w-full flex-col items-center justify-center gap-1 p-2 text-center">
                           <FileText size={22} />
-                          <span className="line-clamp-2 text-2xs">{attachment.fileName}</span>
+                          <span className="text-2xs line-clamp-2">{attachment.fileName}</span>
                         </span>
                       )}
                     </a>
@@ -252,7 +252,7 @@ export function ExpenseDetailSheet({
             <section className="space-y-3">
               <p className="eyebrow">{t('comments')}</p>
               {comments.length === 0 ? (
-                <p className="flex items-center gap-2 text-sm text-content-subtle">
+                <p className="text-content-subtle flex items-center gap-2 text-sm">
                   <ChatCircle size={16} />
                   {t('noComments')}
                 </p>
@@ -267,14 +267,14 @@ export function ExpenseDetailSheet({
                       />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-baseline gap-2">
-                          <span className="truncate text-sm font-medium text-content">
+                          <span className="text-content truncate text-sm font-medium">
                             {comment.author?.name ?? tc('none')}
                           </span>
-                          <span className="shrink-0 text-xs text-content-subtle">
+                          <span className="text-content-subtle shrink-0 text-xs">
                             {relative(comment.createdAt)}
                           </span>
                         </div>
-                        <p className="whitespace-pre-wrap text-sm text-content-muted">
+                        <p className="text-content-muted text-sm whitespace-pre-wrap">
                           {comment.body}
                         </p>
                       </div>
@@ -306,7 +306,7 @@ export function ExpenseDetailSheet({
             </section>
           </>
         ) : (
-          <p className="text-sm text-content-muted">{tc('loading')}</p>
+          <p className="text-content-muted text-sm">{tc('loading')}</p>
         )}
       </SheetBody>
 

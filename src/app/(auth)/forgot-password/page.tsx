@@ -54,7 +54,7 @@ export default function ForgotPasswordPage() {
   const backToSignIn = (
     <Link
       href="/login"
-      className="font-medium text-content underline-offset-4 transition-colors hover:text-brand hover:underline"
+      className="text-content hover:text-brand font-medium underline-offset-4 transition-colors hover:underline"
     >
       {t('backToSignIn')}
     </Link>
@@ -68,7 +68,7 @@ export default function ForgotPasswordPage() {
         footer={backToSignIn}
       >
         <div className="flex flex-col items-center gap-4 text-center">
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand/10 text-brand">
+          <span className="bg-brand/10 text-brand flex h-12 w-12 items-center justify-center rounded-full">
             <EnvelopeSimple size={24} aria-hidden="true" />
           </span>
           <Button

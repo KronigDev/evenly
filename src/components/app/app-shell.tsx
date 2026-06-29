@@ -68,12 +68,12 @@ function Wordmark() {
   return (
     <Link
       href="/dashboard"
-      className="flex items-center gap-2.5 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-brand/55"
+      className="focus-visible:ring-brand/55 flex items-center gap-2.5 rounded-lg outline-none focus-visible:ring-2"
     >
-      <span className="grid h-8 w-8 place-items-center rounded-xl bg-brand text-base font-semibold text-ink-on shadow-soft">
+      <span className="bg-brand text-ink-on shadow-soft grid h-8 w-8 place-items-center rounded-xl text-base font-semibold">
         E
       </span>
-      <span className="text-[17px] font-semibold tracking-tight text-content">{t('appName')}</span>
+      <span className="text-content text-[17px] font-semibold tracking-tight">{t('appName')}</span>
     </Link>
   );
 }
@@ -93,11 +93,11 @@ function NotificationsBell() {
     <Link
       href="/notifications"
       aria-label={unread > 0 ? `${t('notifications')} (${unread})` : t('notifications')}
-      className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-content outline-none transition-colors hover:bg-surface-2 focus-visible:ring-2 focus-visible:ring-brand/55"
+      className="text-content hover:bg-surface-2 focus-visible:ring-brand/55 relative inline-flex h-10 w-10 items-center justify-center rounded-lg transition-colors outline-none focus-visible:ring-2"
     >
       <Bell size={20} />
       {unread > 0 ? (
-        <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-brand ring-2 ring-surface" />
+        <span className="bg-brand ring-surface absolute top-2 right-2 h-2 w-2 rounded-full ring-2" />
       ) : null}
     </Link>
   );
@@ -133,7 +133,7 @@ function ThemeChoices() {
               aria-label={option.label}
               onClick={() => setTheme(option.value)}
               className={cn(
-                'flex h-8 items-center justify-center rounded-md border outline-none transition-colors duration-150 ease-smooth focus-visible:ring-2 focus-visible:ring-brand/55',
+                'ease-smooth focus-visible:ring-brand/55 flex h-8 items-center justify-center rounded-md border transition-colors duration-150 outline-none focus-visible:ring-2',
                 active
                   ? 'border-brand bg-brand/10 text-brand'
                   : 'border-hairline bg-surface-2 text-content-muted hover:bg-surface-3 hover:text-content',
@@ -185,7 +185,7 @@ function LanguageChoices() {
               aria-pressed={active}
               onClick={() => void select(option.value)}
               className={cn(
-                'flex h-8 items-center justify-center rounded-md border text-xs font-medium outline-none transition-colors duration-150 ease-smooth focus-visible:ring-2 focus-visible:ring-brand/55 disabled:opacity-60',
+                'ease-smooth focus-visible:ring-brand/55 flex h-8 items-center justify-center rounded-md border text-xs font-medium transition-colors duration-150 outline-none focus-visible:ring-2 disabled:opacity-60',
                 active
                   ? 'border-brand bg-brand/10 text-brand'
                   : 'border-hairline bg-surface-2 text-content-muted hover:bg-surface-3 hover:text-content',
@@ -218,21 +218,21 @@ function UserMenu() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex w-[14.5rem] max-w-full items-center gap-3 rounded-lg px-2 py-2 text-left outline-none transition-colors hover:bg-surface-2 focus-visible:ring-2 focus-visible:ring-brand/55">
+      <DropdownMenuTrigger className="hover:bg-surface-2 focus-visible:ring-brand/55 flex w-[14.5rem] max-w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors outline-none focus-visible:ring-2">
         <Avatar name={user.name} image={user.image} size="sm" />
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-sm font-medium text-content">{user.name}</span>
-          <span className="block truncate text-xs text-content-muted">{user.email}</span>
+          <span className="text-content block truncate text-sm font-medium">{user.name}</span>
+          <span className="text-content-muted block truncate text-xs">{user.email}</span>
         </span>
-        <CaretUpDown size={16} aria-hidden="true" className="shrink-0 text-content-subtle" />
+        <CaretUpDown size={16} aria-hidden="true" className="text-content-subtle shrink-0" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
-        className="bottom-full top-auto mb-2 mt-0 w-[15rem] origin-bottom"
+        className="top-auto bottom-full mt-0 mb-2 w-[15rem] origin-bottom"
       >
         <div className="px-2.5 py-2">
-          <p className="truncate text-sm font-medium text-content">{user.name}</p>
-          <p className="truncate text-xs text-content-muted">{user.email}</p>
+          <p className="text-content truncate text-sm font-medium">{user.name}</p>
+          <p className="text-content-muted truncate text-xs">{user.email}</p>
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem icon={<Gear size={16} />} onSelect={() => router.push('/settings')}>
@@ -256,7 +256,7 @@ function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-hairline bg-surface lg:flex">
+    <aside className="border-hairline bg-surface fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r lg:flex">
       <div className="flex h-16 items-center justify-between px-5">
         <Wordmark />
         <NotificationsBell />
@@ -280,7 +280,7 @@ function Sidebar() {
               href={href}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium outline-none transition-colors duration-150 ease-smooth focus-visible:ring-2 focus-visible:ring-brand/55',
+                'ease-smooth focus-visible:ring-brand/55 flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-150 outline-none focus-visible:ring-2',
                 active
                   ? 'bg-surface-2 text-content'
                   : 'text-content-muted hover:bg-surface-2 hover:text-content',
@@ -293,7 +293,7 @@ function Sidebar() {
         })}
       </nav>
 
-      <div className="border-t border-hairline p-3">
+      <div className="border-hairline border-t p-3">
         <UserMenu />
       </div>
     </aside>
@@ -303,7 +303,7 @@ function Sidebar() {
 /** Mobile top bar (< lg): wordmark + notifications + theme. */
 function MobileTopBar() {
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-hairline bg-surface/95 px-4 backdrop-blur-sm lg:hidden">
+    <header className="border-hairline bg-surface/95 sticky top-0 z-30 flex h-14 items-center justify-between border-b px-4 backdrop-blur-sm lg:hidden">
       <Wordmark />
       <div className="flex items-center gap-0.5">
         <NotificationsBell />
@@ -335,7 +335,7 @@ function MobileTabBar() {
         href={href}
         aria-current={active ? 'page' : undefined}
         className={cn(
-          'flex flex-1 flex-col items-center justify-center gap-0.5 text-[11px] font-medium outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-brand/55',
+          'focus-visible:ring-brand/55 flex flex-1 flex-col items-center justify-center gap-0.5 text-[11px] font-medium transition-colors duration-150 outline-none focus-visible:ring-2',
           active ? 'text-content' : 'text-content-subtle hover:text-content',
         )}
       >
@@ -348,7 +348,7 @@ function MobileTabBar() {
   return (
     <nav
       aria-label={t('menu')}
-      className="fixed inset-x-0 bottom-0 z-30 flex h-16 items-stretch border-t border-hairline bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-sm lg:hidden"
+      className="border-hairline bg-surface/95 fixed inset-x-0 bottom-0 z-30 flex h-16 items-stretch border-t pb-[env(safe-area-inset-bottom)] backdrop-blur-sm lg:hidden"
     >
       {left.map(tab)}
       <Link
@@ -356,7 +356,7 @@ function MobileTabBar() {
         aria-label={t('addExpense')}
         className="flex flex-1 items-center justify-center outline-none"
       >
-        <span className="grid h-11 w-11 place-items-center rounded-full bg-ink text-ink-on shadow-soft transition-transform active:scale-95">
+        <span className="bg-ink text-ink-on shadow-soft grid h-11 w-11 place-items-center rounded-full transition-transform active:scale-95">
           <Plus size={22} weight="bold" aria-hidden="true" />
         </span>
       </Link>
@@ -390,15 +390,15 @@ function VerifyEmailBanner() {
   }
 
   return (
-    <div className="border-b border-warning/30 bg-warning/10">
+    <div className="border-warning/30 bg-warning/10 border-b">
       <div className="mx-auto flex w-full max-w-5xl items-center gap-3 px-4 py-2.5 sm:px-6 lg:px-8">
         <WarningCircle
           size={18}
           weight="fill"
           aria-hidden="true"
-          className="shrink-0 text-warning"
+          className="text-warning shrink-0"
         />
-        <p className="min-w-0 flex-1 text-sm text-content">{t('verifyEmailTitle')}</p>
+        <p className="text-content min-w-0 flex-1 text-sm">{t('verifyEmailTitle')}</p>
         <Button size="sm" variant="secondary" loading={sending} onClick={() => void resend()}>
           {t('resendVerification')}
         </Button>
@@ -425,13 +425,13 @@ export interface AppShellProps {
 export function AppShell({ user, children }: AppShellProps) {
   return (
     <UserProvider user={user}>
-      <div className="min-h-[100dvh] bg-canvas">
+      <div className="bg-canvas min-h-[100dvh]">
         <Sidebar />
 
         <div className="flex min-h-[100dvh] flex-col lg:pl-64">
           <MobileTopBar />
           <VerifyEmailBanner />
-          <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-24 pt-6 sm:px-6 lg:px-8 lg:pb-12 lg:pt-10">
+          <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-24 sm:px-6 lg:px-8 lg:pt-10 lg:pb-12">
             {children}
           </main>
         </div>

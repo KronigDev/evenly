@@ -69,7 +69,7 @@ function MagicLinkForm() {
   const passwordSignIn = (
     <Link
       href={withNext('/login', next)}
-      className="font-medium text-content underline-offset-4 transition-colors hover:text-brand hover:underline"
+      className="text-content hover:text-brand font-medium underline-offset-4 transition-colors hover:underline"
     >
       {t('usePassword')}
     </Link>
@@ -83,10 +83,10 @@ function MagicLinkForm() {
         footer={passwordSignIn}
       >
         <div className="flex flex-col items-center gap-4 text-center">
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand/10 text-brand">
+          <span className="bg-brand/10 text-brand flex h-12 w-12 items-center justify-center rounded-full">
             <EnvelopeSimple size={24} aria-hidden="true" />
           </span>
-          <p className="text-sm text-content">
+          <p className="text-content text-sm">
             <span className="font-medium">{sentEmail}</span>
           </p>
           <Button
@@ -111,7 +111,7 @@ function MagicLinkForm() {
         {linkError ? (
           <p
             role="alert"
-            className="rounded-lg border border-negative/30 bg-negative/10 px-3 py-2 text-sm text-negative"
+            className="border-negative/30 bg-negative/10 text-negative rounded-lg border px-3 py-2 text-sm"
           >
             {t('linkInvalid')}
           </p>

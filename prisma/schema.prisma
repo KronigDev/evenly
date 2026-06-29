@@ -1,0 +1,478 @@
+// =============================================================================
+// Evenly — Prisma schema
+// =============================================================================
+// Money is ALWAYS stored as integer minor units (cents) of a currency. Balance
+// math runs in the group's base currency: every expense total is converted to
+// base once (`amountBase`) and splits/payments are stored in base minor units,
+// so splits always sum exactly to the total with no floating-point drift.
+// =============================================================================
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// -----------------------------------------------------------------------------
+// Enums
+// -----------------------------------------------------------------------------
+
+enum Theme {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+enum GroupType {
+  STANDARD
+  DIRECT // a 1:1 balance between exactly two people, "without a group"
+}
+
+enum MemberRole {
+  ADMIN
+  MEMBER
+}
+
+enum MemberStatus {
+  ACTIVE
+  INVITED // placeholder member; not yet linked to a real account
+  LEFT
+}
+
+enum SplitMethod {
+  EQUAL
+  EXACT
+  PERCENTAGE
+  SHARES
+  ADJUSTMENT
+  ITEMIZED
+}
+
+enum TokenType {
+  MAGIC_LINK
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  REVOKED
+}
+
+enum RecurrenceFrequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+enum ActivityType {
+  GROUP_CREATED
+  GROUP_UPDATED
+  GROUP_ARCHIVED
+  MEMBER_INVITED
+  MEMBER_JOINED
+  MEMBER_REMOVED
+  MEMBER_LEFT
+  EXPENSE_ADDED
+  EXPENSE_UPDATED
+  EXPENSE_DELETED
+  SETTLEMENT_ADDED
+  SETTLEMENT_DELETED
+  COMMENT_ADDED
+  REMINDER_SENT
+}
+
+enum NotificationType {
+  EXPENSE_ADDED
+  EXPENSE_UPDATED
+  EXPENSE_DELETED
+  SETTLEMENT_ADDED
+  COMMENT_ADDED
+  MEMBER_JOINED
+  INVITE_RECEIVED
+  REMINDER_RECEIVED
+}
+
+// -----------------------------------------------------------------------------
+// Identity & auth
+// -----------------------------------------------------------------------------
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique // stored lower-cased
+  name            String
+  passwordHash    String? // null when the account only uses magic links
+  emailVerifiedAt DateTime?
+  image           String? // avatar storage key (served from /api/files/:key)
+  defaultCurrency String    @default("EUR")
+  locale          String    @default("en")
+  theme           Theme     @default(SYSTEM)
+
+  // notification preferences
+  notifyExpenseEmail   Boolean @default(true)
+  notifyReminderEmail  Boolean @default(true)
+  notifyInviteEmail    Boolean @default(true)
+  notifyCommentEmail   Boolean @default(false)
+  notifyInApp          Boolean @default(true)
+
+  deletedAt DateTime? // soft-delete: PII scrubbed, history preserved
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  sessions       Session[]
+  tokens         AuthToken[]
+  memberships    GroupMember[]
+  createdGroups  Group[]        @relation("GroupCreatedBy")
+  createdExpenses Expense[]     @relation("ExpenseCreatedBy")
+  sentInvites    Invite[]       @relation("InviteSentBy")
+  invitedMembers GroupMember[]  @relation("MemberInvitedBy")
+  settlements    Settlement[]   @relation("SettlementCreatedBy")
+  comments       Comment[]
+  attachments    Attachment[]
+  activities     Activity[]
+  notifications  Notification[]
+  recurringRules RecurringRule[] @relation("RecurringCreatedBy")
+
+  @@index([email])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique // sha256 of the opaque secret held in the cookie
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userAgent String?
+  ip        String?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model AuthToken {
+  id         String    @id @default(cuid())
+  type       TokenType
+  tokenHash  String    @unique // sha256 of the opaque token in the link
+  email      String // lower-cased target email
+  userId     String?
+  user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  redirectTo String? // e.g. an invite acceptance URL to resume after login
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([email])
+  @@index([type])
+  @@index([expiresAt])
+}
+
+// -----------------------------------------------------------------------------
+// Groups & membership
+// -----------------------------------------------------------------------------
+
+model Group {
+  id            String    @id @default(cuid())
+  type          GroupType @default(STANDARD)
+  name          String
+  description   String?
+  emoji         String? // e.g. "🏠"
+  color         String? // accent token key, e.g. "violet"
+  imageKey      String? // optional uploaded cover image
+  baseCurrency  String    @default("EUR")
+  simplifyDebts Boolean   @default(true)
+  archivedAt    DateTime?
+
+  createdById String?
+  createdBy   User?   @relation("GroupCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members        GroupMember[]
+  expenses       Expense[]
+  settlements    Settlement[]
+  invites        Invite[]
+  activities     Activity[]
+  recurringRules RecurringRule[]
+
+  @@index([type])
+}
+
+model GroupMember {
+  id          String       @id @default(cuid())
+  groupId     String
+  group       Group        @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId      String? // null while this is an invited placeholder
+  user        User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        MemberRole   @default(MEMBER)
+  status      MemberStatus @default(ACTIVE)
+  displayName String // shown name (placeholder name, or per-group nickname)
+  email       String? // lower-cased; set for invited placeholders
+  invitedById String?
+  invitedBy   User?        @relation("MemberInvitedBy", fields: [invitedById], references: [id], onDelete: SetNull)
+  joinedAt    DateTime     @default(now())
+  leftAt      DateTime?
+
+  payers       ExpensePayer[]
+  splits       ExpenseSplit[]
+  itemSplits   ExpenseItemSplit[]
+  settlementsFrom Settlement[]   @relation("SettlementFrom")
+  settlementsTo   Settlement[]   @relation("SettlementTo")
+  invites      Invite[]
+
+  @@unique([groupId, userId])
+  @@index([groupId])
+  @@index([userId])
+  @@index([email])
+}
+
+model Invite {
+  id              String       @id @default(cuid())
+  groupId         String
+  group           Group        @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  memberId        String
+  member          GroupMember  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  email           String // lower-cased
+  tokenHash       String       @unique
+  status          InviteStatus @default(PENDING)
+  invitedById     String?
+  invitedBy       User?        @relation("InviteSentBy", fields: [invitedById], references: [id], onDelete: SetNull)
+  acceptedByUserId String?
+  acceptedAt      DateTime?
+  expiresAt       DateTime
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@unique([groupId, email])
+  @@index([email])
+  @@index([status])
+}
+
+// -----------------------------------------------------------------------------
+// Expenses
+// -----------------------------------------------------------------------------
+
+model Expense {
+  id           String      @id @default(cuid())
+  groupId      String
+  group        Group       @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  description  String
+  category     String      @default("general")
+  note         String?
+  currency     String // currency the amount was entered in
+  amount       Int // total in `currency` minor units (display)
+  exchangeRate Decimal     @default(1) @db.Decimal(18, 8) // currency -> base
+  amountBase   Int // total in group base-currency minor units (used for balances)
+  date         DateTime
+  splitMethod  SplitMethod @default(EQUAL)
+
+  createdById     String?
+  createdBy       User?          @relation("ExpenseCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  recurringRuleId String?
+  recurringRule   RecurringRule? @relation(fields: [recurringRuleId], references: [id], onDelete: SetNull)
+
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  payers      ExpensePayer[]
+  splits      ExpenseSplit[]
+  items       ExpenseItem[]
+  comments    Comment[]
+  attachments Attachment[]
+
+  @@index([groupId])
+  @@index([date])
+  @@index([category])
+}
+
+model ExpensePayer {
+  id         String      @id @default(cuid())
+  expenseId  String
+  expense    Expense     @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  memberId   String
+  member     GroupMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  paidAmount Int // base minor units
+
+  @@unique([expenseId, memberId])
+  @@index([memberId])
+}
+
+model ExpenseSplit {
+  id         String      @id @default(cuid())
+  expenseId  String
+  expense    Expense     @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  memberId   String
+  member     GroupMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  owedAmount Int // base minor units — this member's share
+  shareValue Decimal? @db.Decimal(18, 6) // raw input (percent / shares / exact / +- adjustment)
+
+  @@unique([expenseId, memberId])
+  @@index([memberId])
+}
+
+model ExpenseItem {
+  id          String  @id @default(cuid())
+  expenseId   String
+  expense     Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  description String
+  amount      Int // base minor units
+
+  splits ExpenseItemSplit[]
+
+  @@index([expenseId])
+}
+
+model ExpenseItemSplit {
+  id         String      @id @default(cuid())
+  itemId     String
+  item       ExpenseItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  memberId   String
+  member     GroupMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  owedAmount Int
+
+  @@unique([itemId, memberId])
+  @@index([memberId])
+}
+
+// -----------------------------------------------------------------------------
+// Settlements ("mark as paid", incl. partial)
+// -----------------------------------------------------------------------------
+
+model Settlement {
+  id           String      @id @default(cuid())
+  groupId      String
+  group        Group       @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  fromMemberId String
+  fromMember   GroupMember @relation("SettlementFrom", fields: [fromMemberId], references: [id], onDelete: Cascade)
+  toMemberId   String
+  toMember     GroupMember @relation("SettlementTo", fields: [toMemberId], references: [id], onDelete: Cascade)
+  amount       Int // base minor units
+  currency     String // base currency (display)
+  date         DateTime    @default(now())
+  note         String?
+
+  createdById String?
+  createdBy   User?   @relation("SettlementCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+
+  @@index([groupId])
+  @@index([fromMemberId])
+  @@index([toMemberId])
+}
+
+// -----------------------------------------------------------------------------
+// Recurring expenses
+// -----------------------------------------------------------------------------
+
+model RecurringRule {
+  id          String              @id @default(cuid())
+  groupId     String
+  group       Group               @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  description String
+  category    String              @default("general")
+  currency    String
+  amount      Int // in `currency` minor units
+  splitMethod SplitMethod         @default(EQUAL)
+  config      Json // { payers: [...], splits: [...] } template
+  frequency   RecurrenceFrequency
+  interval    Int                 @default(1)
+  nextRunAt   DateTime
+  lastRunAt   DateTime?
+  endDate     DateTime?
+  active      Boolean             @default(true)
+
+  createdById String?
+  createdBy   User?   @relation("RecurringCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  expenses Expense[]
+
+  @@index([groupId])
+  @@index([active, nextRunAt])
+}
+
+// -----------------------------------------------------------------------------
+// Comments & attachments
+// -----------------------------------------------------------------------------
+
+model Comment {
+  id        String  @id @default(cuid())
+  expenseId String
+  expense   Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  authorId  String?
+  author    User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  body      String
+  createdAt DateTime @default(now())
+
+  @@index([expenseId])
+}
+
+model Attachment {
+  id           String  @id @default(cuid())
+  expenseId    String
+  expense      Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  fileName     String
+  mimeType     String
+  size         Int
+  storageKey   String // filename under UPLOAD_DIR
+  uploadedById String?
+  uploadedBy   User?   @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  createdAt    DateTime @default(now())
+
+  @@index([expenseId])
+}
+
+// -----------------------------------------------------------------------------
+// Activity feed & notifications
+// -----------------------------------------------------------------------------
+
+model Activity {
+  id        String       @id @default(cuid())
+  groupId   String?
+  group     Group?       @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  actorId   String?
+  actor     User?        @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  type      ActivityType
+  data      Json
+  expenseId String?
+  createdAt DateTime     @default(now())
+
+  @@index([groupId])
+  @@index([createdAt])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  data      Json
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  @@index([userId])
+  @@index([readAt])
+}
+
+// -----------------------------------------------------------------------------
+// Currency exchange rates (seeded; optionally refreshed from an API)
+// -----------------------------------------------------------------------------
+
+model ExchangeRate {
+  id    String   @id @default(cuid())
+  base  String // pivot currency (USD)
+  quote String
+  rate  Decimal  @db.Decimal(18, 8) // 1 base = `rate` quote
+  asOf  DateTime @default(now())
+
+  @@unique([base, quote])
+}

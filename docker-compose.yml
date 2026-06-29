@@ -1,0 +1,79 @@
+name: evenly
+
+services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL database
+  # ---------------------------------------------------------------------------
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-evenly}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-evenly}
+      POSTGRES_DB: ${POSTGRES_DB:-evenly}
+    ports:
+      - '${DB_PORT:-5432}:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-evenly} -d ${POSTGRES_DB:-evenly}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ---------------------------------------------------------------------------
+  # Mailpit — local mail catcher. ALL outgoing email lands here in dev.
+  #   SMTP:  mailpit:1025      Web UI: http://localhost:8025
+  # ---------------------------------------------------------------------------
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - '${MAILPIT_SMTP_PORT:-1025}:1025'
+      - '${MAILPIT_UI_PORT:-8025}:8025'
+    environment:
+      MP_MAX_MESSAGES: 500
+      MP_SMTP_AUTH_ACCEPT_ANY: 'true'
+      MP_SMTP_AUTH_ALLOW_INSECURE: 'true'
+
+  # ---------------------------------------------------------------------------
+  # The Evenly Next.js app. Runs migrations + seed on startup, then serves.
+  #   App: http://localhost:3001
+  # ---------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    ports:
+      - '${APP_PORT:-3001}:3000'
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-evenly}:${POSTGRES_PASSWORD:-evenly}@db:5432/${POSTGRES_DB:-evenly}?schema=public
+      APP_URL: ${APP_URL:-http://localhost:3001}
+      NEXT_PUBLIC_APP_URL: ${APP_URL:-http://localhost:3001}
+      AUTH_SECRET: ${AUTH_SECRET:-dev-only-insecure-secret-change-me-0123456789abcdef}
+      # The dockerised dev stack always routes mail to the bundled Mailpit
+      # catcher (http://localhost:8025). For production, override these in your
+      # deployment environment with a real SMTP provider (see .env.example).
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_SECURE: 'false'
+      EMAIL_FROM: ${EMAIL_FROM:-Evenly <no-reply@evenly.local>}
+      EXCHANGE_RATE_API_URL: ${EXCHANGE_RATE_API_URL:-}
+      EXCHANGE_RATE_API_KEY: ${EXCHANGE_RATE_API_KEY:-}
+      RUN_SEED: ${RUN_SEED:-true}
+      UPLOAD_DIR: /app/uploads
+    volumes:
+      - uploads_data:/app/uploads
+
+volumes:
+  db_data:
+  uploads_data:

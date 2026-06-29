@@ -1,0 +1,10 @@
+# pnpm reads build-script approvals here (the package.json "pnpm" field is no
+# longer read in pnpm v10+). These packages run native/postinstall build steps.
+allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': true
+  prisma: true
+  esbuild: true
+  '@node-rs/argon2': true
+  unrs-resolver: true
+  sharp: true

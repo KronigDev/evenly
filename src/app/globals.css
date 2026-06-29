@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   Design tokens — warm monochrome surfaces, emerald brand/positive accent,
+   rose for "you owe". Light and dark are tuned for equal contrast & hierarchy.
+   Channels are space-separated RGB so Tailwind alpha modifiers work.
+   ========================================================================== */
+:root {
+  --c-canvas: 250 249 246;
+  --c-surface: 255 255 255;
+  --c-surface-2: 246 245 242;
+  --c-surface-3: 239 238 233;
+  --c-border: 232 230 224;
+  --c-border-strong: 213 210 203;
+  --c-ink: 26 26 24;
+  --c-on-ink: 250 249 246;
+  --c-text: 28 28 26;
+  --c-text-muted: 104 102 96;
+  --c-text-subtle: 146 144 137;
+  --c-brand: 4 120 87;
+  --c-brand-strong: 4 95 70;
+  --c-positive: 21 122 70;
+  --c-negative: 190 24 60;
+  --c-warning: 169 86 8;
+  --c-info: 30 100 158;
+  --c-shadow: 30 28 24;
+}
+
+.dark {
+  --c-canvas: 12 12 14;
+  --c-surface: 23 23 26;
+  --c-surface-2: 30 30 34;
+  --c-surface-3: 39 39 44;
+  --c-border: 44 44 50;
+  --c-border-strong: 62 62 69;
+  --c-ink: 244 243 240;
+  --c-on-ink: 22 22 25;
+  --c-text: 240 239 235;
+  --c-text-muted: 162 161 154;
+  --c-text-subtle: 120 119 113;
+  --c-brand: 52 211 153;
+  --c-brand-strong: 110 231 183;
+  --c-positive: 52 211 153;
+  --c-negative: 251 113 133;
+  --c-warning: 251 191 96;
+  --c-info: 125 200 247;
+  --c-shadow: 0 0 0;
+}
+
+/* ----------------------------------------------------------------------- */
+@layer base {
+  * {
+    border-color: rgb(var(--c-border));
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: rgb(var(--c-canvas));
+    color: rgb(var(--c-text));
+    font-feature-settings: 'cv11', 'ss01';
+    overscroll-behavior-y: none;
+  }
+
+  /* Tabular figures everywhere money is shown keeps columns aligned. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+
+  ::selection {
+    background-color: rgb(var(--c-brand) / 0.18);
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--c-brand) / 0.6);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Refined, unobtrusive scrollbars. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--c-border-strong)) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--c-border-strong));
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(var(--c-text-subtle));
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+  }
+}
+
+@layer components {
+  /* Small uppercase section label. */
+  .eyebrow {
+    @apply text-2xs font-medium uppercase tracking-eyebrow text-content-subtle;
+  }
+
+  /* Hairline-bordered surface used for most cards. */
+  .surface-card {
+    @apply rounded-xl border border-hairline bg-surface shadow-soft;
+  }
+
+  /* Skeleton shimmer used for loading states. */
+  .skeleton {
+    @apply relative overflow-hidden rounded-md bg-surface-2;
+  }
+  .skeleton::after {
+    @apply absolute inset-0;
+    content: '';
+    background: linear-gradient(90deg, transparent, rgb(var(--c-text) / 0.06), transparent);
+    transform: translateX(-100%);
+    animation: shimmer 1.6s infinite;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  /* Hide content visually but keep it for screen readers. */
+  .sr-only-focusable:not(:focus):not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* Respect reduced-motion: disable non-essential animation & transitions. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

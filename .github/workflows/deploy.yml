@@ -1,0 +1,32 @@
+name: Deploy
+
+# Push to main -> the server updates itself. Runs on the self-hosted runner that
+# lives on the production host as the non-root "deploy" user (label: deploy).
+# The runner operates directly on the deployed clone at /opt/evenly; it does NOT
+# use actions/checkout. Database migrations run on container start.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: evenly-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, deploy]
+    steps:
+      - name: Sync /opt/evenly to origin/main
+        run: |
+          cd /opt/evenly
+          git fetch --all --prune
+          git reset --hard origin/main
+
+      - name: Rebuild and restart (production compose)
+        run: |
+          cd /opt/evenly
+          docker compose -f docker-compose.prod.yml up -d --build
+
+      - name: Prune dangling images
+        run: docker image prune -f

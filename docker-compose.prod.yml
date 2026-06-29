@@ -1,0 +1,61 @@
+# ============================================================================
+#  Evenly — PRODUCTION compose
+#  App + PostgreSQL, bound to 127.0.0.1 only (put nginx in front for TLS).
+#  Mailpit/Adminer are NOT included here — production uses a real SMTP provider.
+#  Required secrets are read from .env (compose fails fast if any are missing).
+# ============================================================================
+name: evenly
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-evenly}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set a strong POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-evenly}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-evenly} -d ${POSTGRES_DB:-evenly}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: evenly:prod
+    container_name: evenly
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: '1'
+      DATABASE_URL: postgresql://${POSTGRES_USER:-evenly}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-evenly}?schema=public
+      APP_URL: ${APP_URL:?set APP_URL to your public https URL in .env}
+      NEXT_PUBLIC_APP_URL: ${APP_URL}
+      AUTH_SECRET: ${AUTH_SECRET:?set a long random AUTH_SECRET in .env (openssl rand -hex 32)}
+      SMTP_HOST: ${SMTP_HOST:?set SMTP_HOST in .env (a real provider for production)}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      EMAIL_FROM: ${EMAIL_FROM:-Evenly <no-reply@evenly.app>}
+      EXCHANGE_RATE_API_URL: ${EXCHANGE_RATE_API_URL:-}
+      EXCHANGE_RATE_API_KEY: ${EXCHANGE_RATE_API_KEY:-}
+      RUN_SEED: ${RUN_SEED:-false}
+      UPLOAD_DIR: /app/uploads
+    # Bind to localhost so the app is only reachable through the reverse proxy.
+    # Drop the "127.0.0.1:" prefix only if you intend to expose it directly.
+    ports:
+      - '127.0.0.1:${APP_PORT:-3000}:3000'
+    volumes:
+      - uploads_data:/app/uploads
+
+volumes:
+  db_data:
+  uploads_data:

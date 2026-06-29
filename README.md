@@ -93,14 +93,14 @@ docker compose -f docker-compose.prod.yml up -d --build
   magic-link / email-verification / password-reset tokens, double-submit CSRF, rate limiting.
 - **Prisma 7 + PostgreSQL** (node-postgres driver adapter), integer-cents money model; a pure,
   property-tested split + debt engine.
-- **next-intl** cookie-based i18n (German + English), **TanStack Query**, **framer-motion**,
+- **next-intl** cookie-based i18n (German + English), **TanStack Query**, **Motion**,
   **Phosphor** icons, self-hosted **Geist** fonts.
 - **nodemailer** for email; **pdf-lib** for PDF export; installable **PWA** (manifest + service worker).
 
 ### Infrastructure
 
 - **Docker** (multi-stage `Dockerfile`) running the built app + Prisma migrations on start.
-- `docker-compose.yml` (development: app + PostgreSQL; emails are printed to the logs) and
+- `docker-compose.yml` (development: app + PostgreSQL; set SMTP for email features) and
   `docker-compose.prod.yml` (production: app + PostgreSQL, localhost-bound).
 - **GitHub Actions**: a CI workflow (lint / typecheck / test / build) and a self-hosted
   push-to-`main` Auto-Deploy workflow.
@@ -122,7 +122,7 @@ Next.js 16 (App Router, RSC) ── React 19 + Tailwind v4 design system (light/
         │
         ├─ Custom auth: argon2 hashing, DB-backed httpOnly sessions, magic-link / verify /
         │   reset tokens, double-submit CSRF, per-instance rate limiting
-        ├─ Email: nodemailer → console log (dev) / any SMTP (prod), localized templates
+        ├─ Email: nodemailer over SMTP (required in dev too), localized templates
         ├─ i18n: next-intl, cookie-based locale (en/de), all strings externalized
         └─ PWA: manifest + service worker + offline fallback + install prompt
 ```
@@ -332,8 +332,8 @@ sudo certbot --nginx -d evenly.your-domain.com
 | `APP_URL` / `NEXT_PUBLIC_APP_URL`     | Public base URL — used to build links in emails. **Required in prod.**              | `https://evenly.example.com`           |
 | `APP_PORT`                            | Host port the app is published on (prod binds it to `127.0.0.1`).                   | `3000`                                 |
 | `AUTH_SECRET`                         | Session/CSRF signing secret. **Set a long random value** (`openssl rand -hex 32`).  | `<64 hex chars>`                       |
-| `SMTP_HOST` / `SMTP_PORT`             | SMTP server. **Empty in dev** (emails are logged); a real provider in prod.         | `smtp.resend.com` / `587`              |
-| `SMTP_USER` / `SMTP_PASS`             | SMTP credentials (empty in dev).                                                    | `resend` / `re_…`                      |
+| `SMTP_HOST` / `SMTP_PORT`             | SMTP server. **Required for email features (in dev too)** — unset = features off.   | `smtp.resend.com` / `587`              |
+| `SMTP_USER` / `SMTP_PASS`             | SMTP credentials.                                                                   | `resend` / `re_…`                      |
 | `SMTP_SECURE`                         | `true` only for implicit TLS on connect (port 465).                                 | `false`                                |
 | `EMAIL_FROM`                          | From header for outgoing mail.                                                      | `Evenly <no-reply@example.com>`        |
 | `EXCHANGE_RATE_API_URL` / `…_API_KEY` | Optional. Refresh FX rates from a provider; otherwise bundled rates are used.       | _(empty)_                              |
@@ -516,8 +516,8 @@ docker compose up -d            # app :3001, Postgres :5432
 ```
 
 - **App** → http://localhost:3001 (demo login `ada@evenly.app` / `password123`)
-- **Emails** → printed to the app logs: `docker compose logs -f app` (invite / magic-link / reset
-  links appear there — dev needs no mail server)
+- **Email** → set `SMTP_*` in `.env` to enable invites / magic-link / verification / reset /
+  reminders. Without SMTP those features are simply disabled (the rest of the app works fully).
 
 Native dev with **Node 20.9+** (Node 24 recommended) + **pnpm**:
 
@@ -529,9 +529,9 @@ pnpm prisma migrate deploy && pnpm prisma:seed
 pnpm dev                                 # hot-reload dev server on http://localhost:3001
 ```
 
-> In dev, `SMTP_HOST` is empty, so Evenly prints every outgoing email (with its link) to the console
-> instead of sending it — grab magic-link / invite links from the logs. Production uses a real SMTP
-> provider instead.
+> Email requires SMTP in development too: set `SMTP_*` in `.env` (any SMTP server works locally). If
+> `SMTP_HOST` is empty, the email-dependent features just don't work; everything else is unaffected.
+> Production uses a real SMTP provider.
 
 ---
 

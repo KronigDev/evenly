@@ -368,7 +368,7 @@
     "allSettledBody": "In dieser Gruppe gibt es keine offenen Salden.",
     "owesYou": "{name} schuldet dir",
     "youOwe": "Du schuldest {name}",
-    "ownsTo": "{from} schuldet {to}",
+    "owesTo": "{from} schuldet {to}",
     "settleUp": "Ausgleichen",
     "yourBalance": "Dein Saldo",
     "positiveBalance": "Dir wird insgesamt geschuldet",

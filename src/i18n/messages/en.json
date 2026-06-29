@@ -368,7 +368,7 @@
     "allSettledBody": "There are no balances to settle in this group.",
     "owesYou": "{name} owes you",
     "youOwe": "You owe {name}",
-    "ownsTo": "{from} owes {to}",
+    "owesTo": "{from} owes {to}",
     "settleUp": "Settle up",
     "yourBalance": "Your balance",
     "positiveBalance": "You're owed overall",

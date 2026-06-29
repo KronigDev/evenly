@@ -23,9 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- **Dropped Mailpit and Adminer** from the dev stack — it is now just **app + PostgreSQL**. With no
-  SMTP configured (dev default), outgoing emails and their links are printed to the app logs instead
-  of being sent.
+- **Dropped Mailpit and Adminer** from the dev stack — it is now just **app + PostgreSQL**. Email
+  requires SMTP in development too: set `SMTP_*` in `.env` to enable invites / magic-link /
+  verification / password reset / reminders; if `SMTP_HOST` is unset those features are simply
+  disabled (the rest of the app is unaffected).
 
 ### Notes
 

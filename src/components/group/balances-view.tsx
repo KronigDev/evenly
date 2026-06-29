@@ -76,7 +76,7 @@ export function BalancesView({ group, balances }: BalancesViewProps) {
     const to = memberName(transfer.toMemberId);
     if (transfer.fromMemberId === youId) return t('youOwe', { name: to });
     if (transfer.toMemberId === youId) return t('owesYou', { name: from });
-    return t('ownsTo', { from, to });
+    return t('owesTo', { from, to });
   }
 
   return (

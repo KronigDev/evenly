@@ -39,7 +39,7 @@ echo                  E V E N L Y  -  Dev
 echo ============================================================
 echo   Laufende Dienste: !RUNCOUNT! / 2
 echo   App:     http://localhost:3001
-echo   E-Mails: docker compose logs -f app   (Invite/Magic-Link Links)
+echo   E-Mails: erfordern SMTP (in .env: SMTP_HOST, sonst deaktiviert)
 echo ------------------------------------------------------------
 echo.
 echo   [1]  Starten             (Stack hochfahren, baut bei Bedarf)
@@ -160,7 +160,7 @@ echo.
 echo ------------------------------------------------------------
 echo   Evenly laeuft:
 echo     App      ^> http://localhost:3001   (Login: ada@evenly.app / password123)
-echo     E-Mails  ^> docker compose logs -f app   (Invite/Magic-Link Links)
+echo     E-Mails  ^> SMTP in .env setzen (sonst Mail-Funktionen deaktiviert)
 echo ------------------------------------------------------------
 exit /b 0
 

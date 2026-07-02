@@ -24,7 +24,7 @@ services:
 
   # ---------------------------------------------------------------------------
   # The Evenly Next.js app. Runs migrations on startup, then serves.
-  #   App: http://localhost:3001
+  #   App: http://localhost:3000
   # ---------------------------------------------------------------------------
   app:
     build:
@@ -35,15 +35,15 @@ services:
       db:
         condition: service_healthy
     ports:
-      - '${APP_PORT:-3001}:3000'
+      - '${APP_PORT:-3000}:3000'
     environment:
       NODE_ENV: production
       DATABASE_URL: postgresql://${POSTGRES_USER:-evenly}:${POSTGRES_PASSWORD:-evenly}@db:5432/${POSTGRES_DB:-evenly}?schema=public
-      APP_URL: ${APP_URL:-http://localhost:3001}
-      NEXT_PUBLIC_APP_URL: ${APP_URL:-http://localhost:3001}
+      APP_URL: ${APP_URL:-http://localhost:3000}
+      NEXT_PUBLIC_APP_URL: ${APP_URL:-http://localhost:3000}
       AUTH_SECRET: ${AUTH_SECRET:-dev-only-insecure-secret-change-me-0123456789abcdef}
-      # Email requires SMTP (in dev too). Set SMTP_* in your .env to enable
-      # invites, magic-link sign-in, verification, password reset and reminders;
+      # Email goes over SMTP. Set SMTP_* in your .env to enable invites,
+      # magic-link sign-in, verification, password reset and reminders;
       # if SMTP_HOST is empty those features simply do not work.
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}

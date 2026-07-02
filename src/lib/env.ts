@@ -19,14 +19,20 @@ const schema = z.object({
     .string()
     .min(16, 'AUTH_SECRET must be at least 16 characters')
     .default('dev-only-insecure-secret-change-me-0123456789abcdef'),
-  // SMTP is required (dev too). Empty SMTP_HOST => email features are disabled.
+  // Empty SMTP_HOST => email features are disabled.
   SMTP_HOST: z.string().default(''),
   SMTP_PORT: z.coerce.number().int().positive().default(587),
   SMTP_USER: z.string().optional().default(''),
   SMTP_PASS: z.string().optional().default(''),
   SMTP_SECURE: stringBool(false),
   EMAIL_FROM: z.string().default('Evenly <no-reply@evenly.local>'),
-  EXCHANGE_RATE_API_URL: z.string().optional().default(''),
+  // Live FX provider — defaults to ExchangeRate-API's free open endpoint
+  // (no key required). "off" disables external calls (bundled rates are used).
+  EXCHANGE_RATE_API_URL: z.preprocess((v) => {
+    if (v === undefined || v === '') return 'https://open.er-api.com/v6/latest/USD';
+    if (typeof v === 'string' && v.toLowerCase() === 'off') return '';
+    return v;
+  }, z.string()),
   EXCHANGE_RATE_API_KEY: z.string().optional().default(''),
   UPLOAD_DIR: z.string().default('./uploads'),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),

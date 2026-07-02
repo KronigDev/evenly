@@ -4,6 +4,23 @@ All notable changes to Evenly are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] — 2026-07-02
+
+### Changed
+
+- **Live exchange rates are now built in:** `EXCHANGE_RATE_API_URL` defaults to
+  [ExchangeRate-API](https://www.exchangerate-api.com)'s free open endpoint
+  (`https://open.er-api.com/v6/latest/USD`, no key required) and rates refresh automatically once a
+  day when they are read. Set `EXCHANGE_RATE_API_URL=off` to disable external calls (bundled
+  fallback rates are used, fully offline).
+- **One SMTP configuration:** `.env.example` and the README no longer distinguish development from
+  production SMTP — there is a single `SMTP_*` block; empty `SMTP_HOST` disables email features.
+- **Default port is now 3000 everywhere** (dev compose, `pnpm dev`/`start`, dev.bat, Playwright,
+  docs) — matching the production compose, so there is a single port to remember.
+- **`src/middleware.ts` renamed to `src/proxy.ts`** (function `middleware` → `proxy`) following the
+  Next.js 16 proxy file convention; fixes the build-time deprecation warning.
+- **pnpm pinned to 11.9.0** (`packageManager`), silencing the update banner during Docker builds.
+
 ## [1.1.0] — 2026-06-29
 
 ### Changed

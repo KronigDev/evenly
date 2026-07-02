@@ -5,7 +5,7 @@ import type { Locale } from '@/i18n/request';
 let transporter: Transporter | null = null;
 
 function getTransport(): Transporter {
-  // SMTP is required (in dev too). If it is not configured, email-dependent
+  // Email needs a configured SMTP server. Without one, email-dependent
   // features (invites, magic link, verification, password reset, reminders)
   // simply do not work — sending throws and the caller handles it.
   if (!env.SMTP_HOST) {

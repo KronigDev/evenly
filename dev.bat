@@ -38,7 +38,7 @@ echo ============================================================
 echo                  E V E N L Y  -  Dev
 echo ============================================================
 echo   Laufende Dienste: !RUNCOUNT! / 2
-echo   App:     http://localhost:3001
+echo   App:     http://localhost:3000
 echo   E-Mails: erfordern SMTP (in .env: SMTP_HOST, sonst deaktiviert)
 echo ------------------------------------------------------------
 echo.
@@ -138,7 +138,7 @@ goto menu
 :browser
 echo.
 echo Oeffne die App im Browser...
-start "" http://localhost:3001
+start "" http://localhost:3000
 timeout /t 1 >nul
 goto menu
 
@@ -159,7 +159,7 @@ goto menu
 echo.
 echo ------------------------------------------------------------
 echo   Evenly laeuft:
-echo     App      ^> http://localhost:3001   (Konto ueber "Registrieren" anlegen)
+echo     App      ^> http://localhost:3000   (Konto ueber "Registrieren" anlegen)
 echo     E-Mails  ^> SMTP in .env setzen (sonst Mail-Funktionen deaktiviert)
 echo ------------------------------------------------------------
 exit /b 0

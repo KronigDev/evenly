@@ -1,11 +1,11 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const baseURL = process.env.E2E_BASE_URL ?? 'http://localhost:3001';
+const baseURL = process.env.E2E_BASE_URL ?? 'http://localhost:3000';
 
 /**
  * Runs the happy-path E2E specs against a running Evenly instance.
  * By default it boots `next dev` (reusing an already-running server, e.g. the
- * dockerised app on :3001). Requires the Postgres service to be up.
+ * dockerised app on :3000). Requires the Postgres service to be up.
  */
 export default defineConfig({
   testDir: './tests/e2e',

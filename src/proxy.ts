@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Inlined here so the middleware bundle stays free of server-only imports.
+// Inlined here so the proxy bundle stays free of server-only imports.
 const CSRF_COOKIE = 'evenly_csrf';
 
 function edgeToken(): string {
@@ -16,7 +16,7 @@ function edgeToken(): string {
  * Ensure every visitor has a CSRF cookie (readable by the client so it can be
  * echoed back in the `x-evenly-csrf` header on mutating requests).
  */
-export function middleware(request: NextRequest): NextResponse {
+export function proxy(request: NextRequest): NextResponse {
   const response = NextResponse.next();
   if (!request.cookies.get(CSRF_COOKIE)) {
     response.cookies.set(CSRF_COOKIE, edgeToken(), {

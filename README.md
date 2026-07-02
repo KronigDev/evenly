@@ -56,7 +56,7 @@ cd /opt/evenly
 
 # 2) Create .env from the example and fill it in.
 #    Required for production: a strong POSTGRES_PASSWORD and AUTH_SECRET, your public
-#    APP_URL, and real SMTP settings.
+#    APP_URL, and your SMTP settings.
 cp .env.example .env
 nano .env
 chmod 600 .env
@@ -74,7 +74,7 @@ docker compose -f docker-compose.prod.yml up -d --build
 - Database **migrations apply automatically** on container start (`prisma migrate deploy`). The
   database starts **empty** — create your account via the register page.
 - Set `APP_URL` to your real public URL so invite / magic-link emails contain working links, and
-  configure a real **SMTP** provider (see [Environment Variables](#environment-variables)).
+  configure **SMTP** (see [Environment Variables](#environment-variables)).
 - Update later with [`./update.sh`](#updates--maintenance) or the
   [auto-deploy runner](#auto-deploy-github-actions-self-hosted-runner).
 
@@ -122,7 +122,7 @@ Next.js 16 (App Router, RSC) ── React 19 + Tailwind v4 design system (light/
         │
         ├─ Custom auth: argon2 hashing, DB-backed httpOnly sessions, magic-link / verify /
         │   reset tokens, double-submit CSRF, per-instance rate limiting
-        ├─ Email: nodemailer over SMTP (required in dev too), localized templates
+        ├─ Email: nodemailer over SMTP, localized templates
         ├─ i18n: next-intl, cookie-based locale (en/de), all strings externalized
         └─ PWA: manifest + service worker + offline fallback + install prompt
 ```
@@ -130,6 +130,10 @@ Next.js 16 (App Router, RSC) ── React 19 + Tailwind v4 design system (light/
 - **Money is never a float.** All amounts are integer minor units (cents). Balance math runs in each
   group's base currency: an expense total is converted to base once, then payments and splits are
   apportioned with the **largest-remainder method**, so a split always sums to the total exactly.
+- **Exchange rates** come from [ExchangeRate-API](https://www.exchangerate-api.com)'s free open
+  endpoint (`https://open.er-api.com/v6/latest/USD`, no API key) and are refreshed automatically
+  once a day. Bundled fallback rates cover offline use; set `EXCHANGE_RATE_API_URL=off` to disable
+  all external calls.
 - **The debt engine** computes per-member net balances, exact pairwise "who owes whom" (a
   deterministic water-fill that preserves every member's balance to the cent) and a minimum-transfer
   **simplified** plan. Both views are property-tested.
@@ -241,7 +245,7 @@ APP_PORT=3000
 # Session/CSRF signing secret — generate with: openssl rand -hex 32
 AUTH_SECRET=<64-hex-chars>
 
-# Real SMTP provider (in dev, an empty SMTP_HOST logs emails). Example: Resend / Postmark / SES.
+# SMTP server for outgoing email (empty SMTP_HOST disables email features). Example: Resend / Postmark / SES.
 SMTP_HOST=smtp.your-provider.com
 SMTP_PORT=587
 SMTP_USER=<smtp-user>
@@ -329,11 +333,11 @@ sudo certbot --nginx -d evenly.your-domain.com
 | `APP_URL` / `NEXT_PUBLIC_APP_URL`     | Public base URL — used to build links in emails. **Required in prod.**              | `https://evenly.example.com`           |
 | `APP_PORT`                            | Host port the app is published on (prod binds it to `127.0.0.1`).                   | `3000`                                 |
 | `AUTH_SECRET`                         | Session/CSRF signing secret. **Set a long random value** (`openssl rand -hex 32`).  | `<64 hex chars>`                       |
-| `SMTP_HOST` / `SMTP_PORT`             | SMTP server. **Required for email features (in dev too)** — unset = features off.   | `smtp.resend.com` / `587`              |
+| `SMTP_HOST` / `SMTP_PORT`             | SMTP server for outgoing email — empty = email features off.                        | `smtp.resend.com` / `587`              |
 | `SMTP_USER` / `SMTP_PASS`             | SMTP credentials.                                                                   | `resend` / `re_…`                      |
 | `SMTP_SECURE`                         | `true` only for implicit TLS on connect (port 465).                                 | `false`                                |
 | `EMAIL_FROM`                          | From header for outgoing mail.                                                      | `Evenly <no-reply@example.com>`        |
-| `EXCHANGE_RATE_API_URL` / `…_API_KEY` | Optional. Refresh FX rates from a provider; otherwise bundled rates are used.       | _(empty)_                              |
+| `EXCHANGE_RATE_API_URL` / `…_API_KEY` | FX provider (auto-refreshed daily). Defaults to ExchangeRate-API's free open endpoint; `off` disables external calls (bundled rates only). | `https://open.er-api.com/v6/latest/USD` |
 | `UPLOAD_DIR`                          | Where receipts/avatars are stored (a writable volume).                              | `/app/uploads`                         |
 
 ---
@@ -502,16 +506,16 @@ This keeps `main` and `dev` green; the self-hosted **Deploy** workflow only runs
 
 The fastest way on **Windows** is **`dev.bat`** (double-click): it creates `.env` on first run,
 checks Docker, and gives you a menu to start / rebuild / stop / reset the **dockerised dev stack**
-(app + PostgreSQL) — the app comes up on **http://localhost:3001** with an empty database.
+(app + PostgreSQL) — the app comes up on **http://localhost:3000** with an empty database.
 
 Cross-platform with Docker:
 
 ```bash
 cp .env.example .env
-docker compose up -d            # app :3001, Postgres :5432
+docker compose up -d            # app :3000, Postgres :5432
 ```
 
-- **App** → http://localhost:3001 (create an account via the register page)
+- **App** → http://localhost:3000 (create an account via the register page)
 - **Email** → set `SMTP_*` in `.env` to enable invites / magic-link / verification / reset /
   reminders. Without SMTP those features are simply disabled (the rest of the app works fully).
 
@@ -522,12 +526,11 @@ pnpm install
 docker compose up -d db                  # just the database
 cp .env.example .env
 pnpm prisma migrate deploy
-pnpm dev                                 # hot-reload dev server on http://localhost:3001
+pnpm dev                                 # hot-reload dev server on http://localhost:3000
 ```
 
-> Email requires SMTP in development too: set `SMTP_*` in `.env` (any SMTP server works locally). If
-> `SMTP_HOST` is empty, the email-dependent features just don't work; everything else is unaffected.
-> Production uses a real SMTP provider.
+> Email goes over SMTP: set `SMTP_*` in `.env` (any SMTP server works). If `SMTP_HOST` is empty,
+> the email-dependent features just don't work; everything else is unaffected.
 
 ---
 
@@ -542,7 +545,7 @@ pnpm test:e2e        # Playwright happy-path E2E (needs the app + DB running, e.
 For E2E, point Playwright at the running app:
 
 ```bash
-E2E_NO_SERVER=1 E2E_BASE_URL=http://localhost:3001 pnpm test:e2e
+E2E_NO_SERVER=1 E2E_BASE_URL=http://localhost:3000 pnpm test:e2e
 ```
 
 ---

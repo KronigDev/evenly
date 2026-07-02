@@ -16,10 +16,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   redirects to `/register` until that first account exists. With `REGISTRATION_ENABLED=true`, anyone
   may register. Enforced server-side in the register API **and** in the magic-link flow (whose
   consume step used to silently create accounts for unknown emails — that backdoor is now gated
-  too). The magic-link request endpoint keeps returning `{sent:true}` regardless of account
-  existence (no disclosure in the response body; response timing is not constant-time, matching the
-  existing password-reset endpoint). The register and login pages adapt (disabled notice, hidden
-  sign-up link), localized in en/de.
+  too). The register and login pages adapt (disabled notice, hidden sign-up link), localized in
+  en/de.
+
+### Security
+
+- **Account-enumeration hardening for magic-link and password-reset requests.** Both endpoints now
+  do all account-dependent work (user lookup, token creation, email send) **after** sending the
+  response via Next's `after()`, and always return `{sent:true}`. Previously the email send was
+  awaited only when an account existed, so response latency leaked account existence — now the
+  response time is independent of whether the email is registered.
 
 ### Fixed
 

@@ -1,3 +1,4 @@
+import { after } from 'next/server';
 import { PASSWORD_RESET_TTL_MS } from '@/lib/auth/constants';
 import { assertCsrf } from '@/lib/auth/csrf';
 import { clientIp, rateLimit } from '@/lib/auth/rate-limit';
@@ -16,21 +17,30 @@ export const POST = apiHandler(async (req: Request) => {
   if (!limit.ok) throw Errors.rateLimited(undefined, limit.retryAfter);
 
   const { email } = await parseBody(req, forgotPasswordSchema);
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (user && !user.deletedAt) {
-    const token = await createAuthToken({
-      type: 'PASSWORD_RESET',
-      email,
-      userId: user.id,
-      ttlMs: PASSWORD_RESET_TTL_MS,
-    });
-    await sendPasswordResetEmail({
-      to: email,
-      url: absoluteUrl(`/reset-password?token=${token}`),
-      locale: resolveLocale(user.locale),
-    }).catch((err) => console.error('[forgot-password] email failed:', err));
-  }
 
-  // Always succeed — never reveal whether an account exists.
+  // Look up the account and send the reset email AFTER responding, so the
+  // response time does not reveal whether an account exists. Body is always
+  // {sent:true}.
+  after(async () => {
+    try {
+      const user = await prisma.user.findUnique({ where: { email } });
+      if (!user || user.deletedAt) return;
+      const token = await createAuthToken({
+        type: 'PASSWORD_RESET',
+        email,
+        userId: user.id,
+        ttlMs: PASSWORD_RESET_TTL_MS,
+      });
+      await sendPasswordResetEmail({
+        to: email,
+        url: absoluteUrl(`/reset-password?token=${token}`),
+        locale: resolveLocale(user.locale),
+      });
+    } catch (err) {
+      console.error('[forgot-password] email failed:', err);
+    }
+  });
+
+  // Always succeed — never reveal whether an account exists (body or timing).
   return ok({ sent: true });
 });

@@ -16,7 +16,6 @@ const eslintConfig = [
       'public/sw.js',
       'next-env.d.ts',
       'scripts/**',
-      'prisma/seed.mjs',
       '**/*.config.{ts,mjs,js}',
     ],
   },

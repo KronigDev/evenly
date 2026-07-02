@@ -23,7 +23,7 @@ services:
       retries: 10
 
   # ---------------------------------------------------------------------------
-  # The Evenly Next.js app. Runs migrations + seed on startup, then serves.
+  # The Evenly Next.js app. Runs migrations on startup, then serves.
   #   App: http://localhost:3001
   # ---------------------------------------------------------------------------
   app:
@@ -53,7 +53,6 @@ services:
       EMAIL_FROM: ${EMAIL_FROM:-Evenly <no-reply@evenly.local>}
       EXCHANGE_RATE_API_URL: ${EXCHANGE_RATE_API_URL:-}
       EXCHANGE_RATE_API_KEY: ${EXCHANGE_RATE_API_KEY:-}
-      RUN_SEED: ${RUN_SEED:-true}
       UPLOAD_DIR: /app/uploads
     volumes:
       - uploads_data:/app/uploads

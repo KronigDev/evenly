@@ -48,7 +48,6 @@ services:
       EMAIL_FROM: ${EMAIL_FROM:-Evenly <no-reply@evenly.app>}
       EXCHANGE_RATE_API_URL: ${EXCHANGE_RATE_API_URL:-}
       EXCHANGE_RATE_API_KEY: ${EXCHANGE_RATE_API_KEY:-}
-      RUN_SEED: ${RUN_SEED:-false}
       UPLOAD_DIR: /app/uploads
     # Bind to localhost so the app is only reachable through the reverse proxy.
     # Drop the "127.0.0.1:" prefix only if you intend to expose it directly.

@@ -2,8 +2,8 @@ import { expect, test } from '@playwright/test';
 
 /**
  * Happy-path E2E against a running Evenly instance (app + Postgres).
- * Covers: register → dashboard → create group → add a split expense, and
- * signing in as the seeded demo account to see balances.
+ * Covers: register → dashboard → create group → add a split expense.
+ * The test registers its own throwaway user — no pre-seeded data required.
  */
 
 test('a new user can register, create a group and add a split expense', async ({ page }) => {
@@ -13,7 +13,7 @@ test('a new user can register, create a group and add a split expense', async ({
   await page.goto('/register');
   await page.locator('input[autocomplete="name"]').fill('Robin Tester');
   await page.locator('input[type="email"]').fill(email);
-  await page.locator('input[autocomplete="new-password"]').fill('password123');
+  await page.locator('input[autocomplete="new-password"]').fill('E2e-Throwaway-Pw-1!');
   await page.getByRole('button', { name: 'Create account' }).click();
 
   await page.waitForURL(/\/dashboard/, { timeout: 20_000 });
@@ -44,17 +44,4 @@ test('a new user can register, create a group and add a split expense', async ({
     },
   );
   await expect(page.getByText('Fuel and snacks').first()).toBeVisible({ timeout: 15_000 });
-});
-
-test('the demo account can sign in and see seeded balances', async ({ page }) => {
-  await page.goto('/login');
-  await page.locator('input[type="email"]').fill('ada@evenly.app');
-  await page.locator('#login-password').fill('password123');
-  await page.getByRole('button', { name: 'Sign in' }).click();
-
-  await page.waitForURL(/\/dashboard/, { timeout: 20_000 });
-
-  // Seeded groups + a balance summary are shown.
-  await expect(page.getByText('Berlin Flat').first()).toBeVisible({ timeout: 15_000 });
-  await expect(page.getByText(/You are owed/i).first()).toBeVisible();
 });

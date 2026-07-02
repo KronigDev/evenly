@@ -36,6 +36,17 @@ export async function sendMail({ to, subject, html, text }: SendMailInput): Prom
 // ---------------------------------------------------------------------------
 // Branded, email-client-safe HTML shell (inline styles, table-free, dark-text).
 // ---------------------------------------------------------------------------
+
+/** Escape a value for interpolation into HTML text or attribute context. */
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 interface LayoutInput {
   heading: string;
   intro: string;
@@ -46,14 +57,17 @@ interface LayoutInput {
   footer: string;
 }
 
+// `intro` and `body` may contain trusted markup from our own templates; any
+// user-provided values interpolated into them must be escaped at the call site.
 function layout({ heading, intro, body, ctaLabel, ctaUrl, footnote, footer }: LayoutInput): string {
+  const url = ctaUrl ? escapeHtml(ctaUrl) : '';
   const button =
     ctaLabel && ctaUrl
-      ? `<a href="${ctaUrl}" style="display:inline-block;background:#0a7a55;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:13px 26px;border-radius:12px;">${ctaLabel}</a>`
+      ? `<a href="${url}" style="display:inline-block;background:#0a7a55;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:13px 26px;border-radius:12px;">${escapeHtml(ctaLabel)}</a>`
       : '';
   const fallback =
     ctaUrl && ctaLabel
-      ? `<p style="margin:24px 0 0;font-size:13px;line-height:1.6;color:#8a8880;">${footnote ?? ''}<br/><a href="${ctaUrl}" style="color:#0a7a55;word-break:break-all;">${ctaUrl}</a></p>`
+      ? `<p style="margin:24px 0 0;font-size:13px;line-height:1.6;color:#8a8880;">${escapeHtml(footnote ?? '')}<br/><a href="${url}" style="color:#0a7a55;word-break:break-all;">${url}</a></p>`
       : '';
   return `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width"/></head>
 <body style="margin:0;padding:0;background:#f4f2ee;">
@@ -63,13 +77,13 @@ function layout({ heading, intro, body, ctaLabel, ctaUrl, footnote, footer }: La
     <span style="font-size:18px;font-weight:700;color:#1a1a18;letter-spacing:-0.01em;">Evenly</span>
   </div>
   <div style="background:#ffffff;border:1px solid #eae8e2;border-radius:18px;padding:32px;">
-    <h1 style="margin:0 0 12px;font-size:22px;line-height:1.25;color:#1a1a18;letter-spacing:-0.02em;">${heading}</h1>
+    <h1 style="margin:0 0 12px;font-size:22px;line-height:1.25;color:#1a1a18;letter-spacing:-0.02em;">${escapeHtml(heading)}</h1>
     <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#52504a;">${intro}</p>
     ${body ? `<p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#52504a;">${body}</p>` : ''}
     ${button}
     ${fallback}
   </div>
-  <p style="margin:20px 4px 0;font-size:12px;line-height:1.6;color:#9a988f;">${footer}</p>
+  <p style="margin:20px 4px 0;font-size:12px;line-height:1.6;color:#9a988f;">${escapeHtml(footer)}</p>
 </div>
 </body></html>`;
 }
@@ -78,6 +92,11 @@ function stripHtml(html: string): string {
   return html
     .replace(/<a [^>]*href="([^"]+)"[^>]*>([^<]*)<\/a>/gi, '$2 ($1)')
     .replace(/<[^>]+>/g, '')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, '&')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 }
@@ -107,12 +126,14 @@ export async function sendInviteEmail(input: {
     },
     locale,
   );
+  const inviterName = escapeHtml(input.inviterName);
+  const groupName = escapeHtml(input.groupName);
   const html = layout({
     heading: pick({ en: "You've been invited", de: 'Du wurdest eingeladen' }, locale),
     intro: pick(
       {
-        en: `<strong>${input.inviterName}</strong> invited you to share expenses in <strong>${input.groupName}</strong>. Accept to see who owes what and settle up.`,
-        de: `<strong>${input.inviterName}</strong> hat dich eingeladen, in <strong>${input.groupName}</strong> Ausgaben zu teilen. Nimm an, um zu sehen, wer wem was schuldet.`,
+        en: `<strong>${inviterName}</strong> invited you to share expenses in <strong>${groupName}</strong>. Accept to see who owes what and settle up.`,
+        de: `<strong>${inviterName}</strong> hat dich eingeladen, in <strong>${groupName}</strong> Ausgaben zu teilen. Nimm an, um zu sehen, wer wem was schuldet.`,
       },
       locale,
     ),
@@ -217,12 +238,15 @@ export async function sendReminderEmail(input: {
   locale?: Locale;
 }): Promise<void> {
   const locale = input.locale ?? 'en';
+  const fromName = escapeHtml(input.fromName);
+  const amountFormatted = escapeHtml(input.amountFormatted);
+  const groupName = escapeHtml(input.groupName);
   const html = layout({
     heading: pick({ en: 'A friendly reminder', de: 'Eine freundliche Erinnerung' }, locale),
     intro: pick(
       {
-        en: `<strong>${input.fromName}</strong> sent you a reminder: you owe <strong>${input.amountFormatted}</strong> in <strong>${input.groupName}</strong>.`,
-        de: `<strong>${input.fromName}</strong> erinnert dich: Du schuldest <strong>${input.amountFormatted}</strong> in <strong>${input.groupName}</strong>.`,
+        en: `<strong>${fromName}</strong> sent you a reminder: you owe <strong>${amountFormatted}</strong> in <strong>${groupName}</strong>.`,
+        de: `<strong>${fromName}</strong> erinnert dich: Du schuldest <strong>${amountFormatted}</strong> in <strong>${groupName}</strong>.`,
       },
       locale,
     ),

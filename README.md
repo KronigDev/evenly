@@ -56,7 +56,7 @@ cd /opt/evenly
 
 # 2) Create .env from the example and fill it in.
 #    Required for production: a strong POSTGRES_PASSWORD and AUTH_SECRET, your public
-#    APP_URL, and real SMTP settings. Keep RUN_SEED=false in production.
+#    APP_URL, and real SMTP settings.
 cp .env.example .env
 nano .env
 chmod 600 .env
@@ -71,8 +71,8 @@ docker compose -f docker-compose.prod.yml up -d --build
 - The app listens on **`127.0.0.1:3000`** (the production compose binds to localhost). Point your
   domain / TLS terminator (nginx, Caddy, Cloudflare, …) at that port; this quick start does **not**
   set up TLS (see [Nginx reverse proxy](#nginx-reverse-proxy-tls) in the production setup).
-- Database **migrations apply automatically** on container start (`prisma migrate deploy`). With
-  `RUN_SEED=false` (the production default) **no demo data** is created.
+- Database **migrations apply automatically** on container start (`prisma migrate deploy`). The
+  database starts **empty** — create your account via the register page.
 - Set `APP_URL` to your real public URL so invite / magic-link emails contain working links, and
   configure a real **SMTP** provider (see [Environment Variables](#environment-variables)).
 - Update later with [`./update.sh`](#updates--maintenance) or the
@@ -248,9 +248,6 @@ SMTP_USER=<smtp-user>
 SMTP_PASS=<smtp-pass>
 SMTP_SECURE=false
 EMAIL_FROM=Evenly <no-reply@your-domain.com>
-
-# Do not seed demo data in production
-RUN_SEED=false
 ```
 
 ### First start — [deploy]
@@ -338,7 +335,6 @@ sudo certbot --nginx -d evenly.your-domain.com
 | `EMAIL_FROM`                          | From header for outgoing mail.                                                      | `Evenly <no-reply@example.com>`        |
 | `EXCHANGE_RATE_API_URL` / `…_API_KEY` | Optional. Refresh FX rates from a provider; otherwise bundled rates are used.       | _(empty)_                              |
 | `UPLOAD_DIR`                          | Where receipts/avatars are stored (a writable volume).                              | `/app/uploads`                         |
-| `RUN_SEED`                            | Seed demo data on start. **`false` in production.**                                 | `false`                                |
 
 ---
 
@@ -506,7 +502,7 @@ This keeps `main` and `dev` green; the self-hosted **Deploy** workflow only runs
 
 The fastest way on **Windows** is **`dev.bat`** (double-click): it creates `.env` on first run,
 checks Docker, and gives you a menu to start / rebuild / stop / reset the **dockerised dev stack**
-(app + PostgreSQL) — the app comes up on **http://localhost:3001** with demo data seeded.
+(app + PostgreSQL) — the app comes up on **http://localhost:3001** with an empty database.
 
 Cross-platform with Docker:
 
@@ -515,7 +511,7 @@ cp .env.example .env
 docker compose up -d            # app :3001, Postgres :5432
 ```
 
-- **App** → http://localhost:3001 (demo login `ada@evenly.app` / `password123`)
+- **App** → http://localhost:3001 (create an account via the register page)
 - **Email** → set `SMTP_*` in `.env` to enable invites / magic-link / verification / reset /
   reminders. Without SMTP those features are simply disabled (the rest of the app works fully).
 
@@ -525,7 +521,7 @@ Native dev with **Node 20.9+** (Node 24 recommended) + **pnpm**:
 pnpm install
 docker compose up -d db                  # just the database
 cp .env.example .env
-pnpm prisma migrate deploy && pnpm prisma:seed
+pnpm prisma migrate deploy
 pnpm dev                                 # hot-reload dev server on http://localhost:3001
 ```
 

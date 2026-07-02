@@ -48,7 +48,7 @@ echo   [3]  Stoppen             (Container stoppen, Daten bleiben)
 echo   [4]  App neu starten
 echo   [5]  Logs anzeigen       (eigenes Fenster, mit STRG+C beenden)
 echo   [6]  Status
-echo   [7]  Datenbank zuruecksetzen   (Volumes loeschen + neu seeden)
+echo   [7]  Datenbank zuruecksetzen   (Volumes loeschen + leer neu starten)
 echo   [8]  App im Browser oeffnen
 echo   [9]  ALLES loeschen      (Container + Volumes + Image)
 echo   [0]  Beenden
@@ -121,7 +121,7 @@ goto menu
 :resetdb
 echo.
 echo [Achtung] Dies LOESCHT die Datenbank und hochgeladene Dateien
-echo und seedet danach frische Demo-Daten.
+echo und startet danach mit einer leeren Datenbank.
 set "ok="
 set /p ok=Wirklich zuruecksetzen? (j/n):
 if /i not "%ok%"=="j" ( echo Abgebrochen. & timeout /t 1 >nul & goto menu )
@@ -130,7 +130,7 @@ echo Entferne Volumes und starte neu...
 docker compose down -v
 docker compose up -d
 if errorlevel 1 ( echo. & echo [Fehler] Zuruecksetzen fehlgeschlagen. & pause & goto menu )
-echo Datenbank wurde zurueckgesetzt und neu geseedet.
+echo Datenbank wurde zurueckgesetzt (leer, Migrationen laufen beim Start).
 call :urls
 pause
 goto menu
@@ -159,7 +159,7 @@ goto menu
 echo.
 echo ------------------------------------------------------------
 echo   Evenly laeuft:
-echo     App      ^> http://localhost:3001   (Login: ada@evenly.app / password123)
+echo     App      ^> http://localhost:3001   (Konto ueber "Registrieren" anlegen)
 echo     E-Mails  ^> SMTP in .env setzen (sonst Mail-Funktionen deaktiviert)
 echo ------------------------------------------------------------
 exit /b 0

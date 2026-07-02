@@ -19,7 +19,6 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
-    "prisma:seed": "node prisma/seed.mjs",
     "db:reset": "prisma migrate reset --force",
     "test": "vitest run",
     "test:watch": "vitest",

@@ -1,6 +1,7 @@
 import { MAGIC_LINK_TTL_MS } from '@/lib/auth/constants';
 import { assertCsrf } from '@/lib/auth/csrf';
 import { clientIp, rateLimit } from '@/lib/auth/rate-limit';
+import { inviteTokenFromPath, registrationMode } from '@/lib/auth/registration';
 import { createAuthToken } from '@/lib/auth/tokens';
 import { prisma } from '@/lib/db';
 import { apiHandler, Errors, ok, parseBody } from '@/lib/http';
@@ -20,6 +21,14 @@ export const POST = apiHandler(async (req: Request) => {
   const next = safeNext(redirectTo, '/dashboard');
   const user = await prisma.user.findUnique({ where: { email } });
   const isActiveUser = Boolean(user && !user.deletedAt);
+
+  // Consuming a magic link for an unknown email would CREATE an account. If
+  // registration is closed for this request, pretend success (anti-enumeration)
+  // but send nothing — the link could only ever fail at consume time.
+  if (!isActiveUser) {
+    const mode = await registrationMode({ email, inviteToken: inviteTokenFromPath(next) });
+    if (mode === 'closed') return ok({ sent: true });
+  }
 
   const token = await createAuthToken({
     type: 'MAGIC_LINK',

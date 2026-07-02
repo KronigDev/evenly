@@ -4,6 +4,7 @@ import { rateLimit, clientIp } from '@/lib/auth/rate-limit';
 import { createSession } from '@/lib/auth/session';
 import { createAuthToken } from '@/lib/auth/tokens';
 import { assertCsrf } from '@/lib/auth/csrf';
+import { registrationMode } from '@/lib/auth/registration';
 import { prisma } from '@/lib/db';
 import { apiHandler, created, Errors, parseBody } from '@/lib/http';
 import { mergePlaceholdersForUser } from '@/lib/invites';
@@ -19,7 +20,12 @@ export const POST = apiHandler(async (req: Request) => {
   const limit = rateLimit(`register:${ip}`, 10, 60_000);
   if (!limit.ok) throw Errors.rateLimited(undefined, limit.retryAfter);
 
-  const { name, email, password, locale } = await parseBody(req, registerSchema);
+  const { name, email, password, locale, inviteToken } = await parseBody(req, registerSchema);
+
+  // When self sign-up is disabled, only the first-ever account (bootstrap) or
+  // an invitation issued to THIS email may create an account.
+  const mode = await registrationMode({ email, inviteToken: inviteToken ?? null });
+  if (mode === 'closed') throw Errors.registrationDisabled();
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing && !existing.deletedAt) {

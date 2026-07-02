@@ -22,6 +22,8 @@ export const Errors = {
   unauthorized: (message = 'You must be signed in.') => new ApiError(401, 'UNAUTHORIZED', message),
   forbidden: (message = 'You do not have access to this resource.') =>
     new ApiError(403, 'FORBIDDEN', message),
+  registrationDisabled: (message = 'Registration is disabled on this server.') =>
+    new ApiError(403, 'REGISTRATION_DISABLED', message),
   notFound: (message = 'Not found.') => new ApiError(404, 'NOT_FOUND', message),
   conflict: (message = 'Conflict.', details?: unknown) =>
     new ApiError(409, 'CONFLICT', message, details),

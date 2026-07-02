@@ -19,6 +19,9 @@ const schema = z.object({
     .string()
     .min(16, 'AUTH_SECRET must be at least 16 characters')
     .default('dev-only-insecure-secret-change-me-0123456789abcdef'),
+  // Self-registration. false (default): invite-only — new accounts only via
+  // group invitations, except the very first account on an empty instance.
+  REGISTRATION_ENABLED: stringBool(false),
   // Empty SMTP_HOST => email features are disabled.
   SMTP_HOST: z.string().default(''),
   SMTP_PORT: z.coerce.number().int().positive().default(587),

@@ -20,7 +20,10 @@ function MagicLinkForm() {
   const { toast } = useToast();
 
   const next = sanitizeNext(params.get('next'));
-  const linkError = params.get('error') === 'invalid';
+  const errorParam = params.get('error');
+  const linkError = errorParam === 'invalid';
+  // Consume refused to create an account (registration disabled, no invite).
+  const disabledError = errorParam === 'disabled';
 
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState<string | null>(null);
@@ -30,10 +33,10 @@ function MagicLinkForm() {
 
   const noticeShown = useRef(false);
   useEffect(() => {
-    if (noticeShown.current || !linkError) return;
+    if (noticeShown.current || (!linkError && !disabledError)) return;
     noticeShown.current = true;
-    toast.error(t('linkInvalid'));
-  }, [linkError, toast, t]);
+    toast.error(linkError ? t('linkInvalid') : t('magicLinkNoAccount'));
+  }, [linkError, disabledError, toast, t]);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -108,12 +111,12 @@ function MagicLinkForm() {
   return (
     <AuthCard title={t('magicLinkTitle')} subtitle={t('magicLinkSubtitle')} footer={passwordSignIn}>
       <form onSubmit={onSubmit} className="space-y-4" noValidate>
-        {linkError ? (
+        {linkError || disabledError ? (
           <p
             role="alert"
             className="border-negative/30 bg-negative/10 text-negative rounded-lg border px-3 py-2 text-sm"
           >
-            {t('linkInvalid')}
+            {linkError ? t('linkInvalid') : t('magicLinkNoAccount')}
           </p>
         ) : null}
 

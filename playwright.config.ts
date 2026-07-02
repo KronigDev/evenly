@@ -30,5 +30,9 @@ export default defineConfig({
         url: baseURL,
         reuseExistingServer: true,
         timeout: 120_000,
+        // The spec registers a throwaway user, which needs open registration.
+        // NB: this only applies when Playwright launches the server; a reused,
+        // already-running app must set REGISTRATION_ENABLED=true itself.
+        env: { REGISTRATION_ENABLED: 'true' },
       },
 });

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { clientIp } from '@/lib/auth/rate-limit';
+import { inviteTokenFromPath, registrationMode } from '@/lib/auth/registration';
 import { createSession } from '@/lib/auth/session';
 import { consumeAuthToken } from '@/lib/auth/tokens';
 import { prisma } from '@/lib/db';
@@ -30,6 +31,15 @@ export async function GET(req: Request): Promise<NextResponse> {
   const email = consumed.email;
   let user = await prisma.user.findUnique({ where: { email } });
   if (!user || user.deletedAt) {
+    // This branch creates an account, so the registration gate applies (the
+    // request route already filters, but tokens may predate a flag change).
+    const mode = await registrationMode({
+      email,
+      inviteToken: inviteTokenFromPath(consumed.redirectTo),
+    });
+    if (mode === 'closed') {
+      return NextResponse.redirect(absoluteUrl('/magic-link?error=disabled'));
+    }
     user = await prisma.user.create({
       data: {
         email,

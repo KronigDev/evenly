@@ -151,7 +151,11 @@
     "passwordRequirements": "At least 8 characters.",
     "termsNotice": "By continuing, you agree to our Terms and Privacy Policy.",
     "emailPlaceholder": "you@example.com",
-    "namePlaceholder": "Your name"
+    "namePlaceholder": "Your name",
+    "signUpDisabledTitle": "Registration is disabled",
+    "signUpDisabledBody": "This Evenly instance is invite-only. Ask a group member for an invitation, or sign in with an existing account.",
+    "registrationDisabled": "Registration is disabled on this server.",
+    "magicLinkNoAccount": "No account exists for this email, and registration is disabled on this instance."
   },
   "dashboard": {
     "title": "Dashboard",

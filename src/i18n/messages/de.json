@@ -151,7 +151,11 @@
     "passwordRequirements": "Mindestens 8 Zeichen.",
     "termsNotice": "Wenn du fortfährst, stimmst du unseren Nutzungsbedingungen und der Datenschutzerklärung zu.",
     "emailPlaceholder": "du@beispiel.de",
-    "namePlaceholder": "Dein Name"
+    "namePlaceholder": "Dein Name",
+    "signUpDisabledTitle": "Registrierung deaktiviert",
+    "signUpDisabledBody": "Diese Evenly-Instanz ist nur per Einladung zugänglich. Bitte ein Gruppenmitglied um eine Einladung oder melde dich mit einem bestehenden Konto an.",
+    "registrationDisabled": "Die Registrierung ist auf diesem Server deaktiviert.",
+    "magicLinkNoAccount": "Für diese E-Mail existiert kein Konto und die Registrierung ist auf dieser Instanz deaktiviert."
   },
   "dashboard": {
     "title": "Übersicht",

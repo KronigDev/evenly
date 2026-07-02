@@ -4,6 +4,35 @@ All notable changes to Evenly are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] — 2026-07-02
+
+### Added
+
+- **`REGISTRATION_ENABLED` flag (default `false`):** self sign-up is now **invite-only by
+  default**. With the flag off, an account can only be created through a group invitation **issued
+  to that exact email** (the token is validated server-side and bound to its address, so a single
+  bearer invite cannot be replayed to mint accounts for other emails) — except the very first
+  account on an empty instance (bootstrap), so a fresh install is never locked out; `/login`
+  redirects to `/register` until that first account exists. With `REGISTRATION_ENABLED=true`, anyone
+  may register. Enforced server-side in the register API **and** in the magic-link flow (whose
+  consume step used to silently create accounts for unknown emails — that backdoor is now gated
+  too). The magic-link request endpoint keeps returning `{sent:true}` regardless of account
+  existence (no disclosure in the response body; response timing is not constant-time, matching the
+  existing password-reset endpoint). The register and login pages adapt (disabled notice, hidden
+  sign-up link), localized in en/de.
+
+### Fixed
+
+- **`/` returned 404:** there was no root page. `/` now redirects to the dashboard when signed in
+  and to the login page otherwise (also fixes the PWA `start_url`).
+
+### Notes
+
+- An automated code-review finding claiming `stripHtml` in `src/lib/mail.ts` decodes HTML entities
+  in the wrong order is a **false positive**: decoding `&amp;` last is the exact inverse of
+  `escapeHtml` (which encodes `&` first); decoding it first would double-decode literal entities.
+  Pinned with round-trip regression tests (`tests/unit/mail.test.ts`).
+
 ## [1.2.0] — 2026-07-02
 
 ### Changed

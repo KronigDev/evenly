@@ -13,6 +13,9 @@ export const registerSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
   locale: localeSchema.optional(),
+  // Raw group-invite token — authorizes registration when self sign-up is
+  // disabled (REGISTRATION_ENABLED=false). Validated server-side.
+  inviteToken: z.string().min(1).max(200).optional(),
 });
 
 export const loginSchema = z.object({

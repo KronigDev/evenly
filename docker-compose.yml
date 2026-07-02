@@ -42,6 +42,8 @@ services:
       APP_URL: ${APP_URL:-http://localhost:3000}
       NEXT_PUBLIC_APP_URL: ${APP_URL:-http://localhost:3000}
       AUTH_SECRET: ${AUTH_SECRET:-dev-only-insecure-secret-change-me-0123456789abcdef}
+      # false = invite-only (first-ever account can always be created).
+      REGISTRATION_ENABLED: ${REGISTRATION_ENABLED:-false}
       # Email goes over SMTP. Set SMTP_* in your .env to enable invites,
       # magic-link sign-in, verification, password reset and reminders;
       # if SMTP_HOST is empty those features simply do not work.

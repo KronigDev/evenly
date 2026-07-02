@@ -72,7 +72,9 @@ docker compose -f docker-compose.prod.yml up -d --build
   domain / TLS terminator (nginx, Caddy, Cloudflare, …) at that port; this quick start does **not**
   set up TLS (see [Nginx reverse proxy](#nginx-reverse-proxy-tls) in the production setup).
 - Database **migrations apply automatically** on container start (`prisma migrate deploy`). The
-  database starts **empty** — create your account via the register page.
+  database starts **empty** — the very first visitor creates the first account (bootstrap). After
+  that, self-registration is **invite-only** by default: new people join via group invitations.
+  Set `REGISTRATION_ENABLED=true` to allow open sign-up.
 - Set `APP_URL` to your real public URL so invite / magic-link emails contain working links, and
   configure **SMTP** (see [Environment Variables](#environment-variables)).
 - Update later with [`./update.sh`](#updates--maintenance) or the
@@ -142,6 +144,10 @@ Next.js 16 (App Router, RSC) ── React 19 + Tailwind v4 design system (light/
   payments / splits / settlements), so balances stay correct.
 - **Authorization everywhere.** Every data access checks group membership / role, so users only ever
   see and modify data for groups they belong to — enforced server-side.
+- **Invite-only by default.** With `REGISTRATION_ENABLED=false` (the default) nobody can sign up on
+  their own: accounts are created via validated group-invite tokens only (enforced in the register
+  API **and** the magic-link flow, which would otherwise auto-create accounts). The very first
+  account on an empty instance can always be created, so a fresh install is never locked out.
 
 ---
 
@@ -325,20 +331,21 @@ sudo certbot --nginx -d evenly.your-domain.com
 
 ## Environment Variables
 
-| Variable                              | Description                                                                         | Example                                |
-| ------------------------------------- | ----------------------------------------------------------------------------------- | -------------------------------------- |
-| `POSTGRES_USER` / `POSTGRES_DB`       | Postgres role and database name.                                                    | `evenly` / `evenly`                    |
-| `POSTGRES_PASSWORD`                   | Postgres password. **Required in prod** — compose refuses to start without it.      | `<long-random>`                        |
-| `DATABASE_URL`                        | Full connection string. In Docker it is built from the `POSTGRES_*` values for you. | `postgresql://evenly:…@db:5432/evenly` |
-| `APP_URL` / `NEXT_PUBLIC_APP_URL`     | Public base URL — used to build links in emails. **Required in prod.**              | `https://evenly.example.com`           |
-| `APP_PORT`                            | Host port the app is published on (prod binds it to `127.0.0.1`).                   | `3000`                                 |
-| `AUTH_SECRET`                         | Session/CSRF signing secret. **Set a long random value** (`openssl rand -hex 32`).  | `<64 hex chars>`                       |
-| `SMTP_HOST` / `SMTP_PORT`             | SMTP server for outgoing email — empty = email features off.                        | `smtp.resend.com` / `587`              |
-| `SMTP_USER` / `SMTP_PASS`             | SMTP credentials.                                                                   | `resend` / `re_…`                      |
-| `SMTP_SECURE`                         | `true` only for implicit TLS on connect (port 465).                                 | `false`                                |
-| `EMAIL_FROM`                          | From header for outgoing mail.                                                      | `Evenly <no-reply@example.com>`        |
-| `EXCHANGE_RATE_API_URL` / `…_API_KEY` | FX provider (auto-refreshed daily). Defaults to ExchangeRate-API's free open endpoint; `off` disables external calls (bundled rates only). | `https://open.er-api.com/v6/latest/USD` |
-| `UPLOAD_DIR`                          | Where receipts/avatars are stored (a writable volume).                              | `/app/uploads`                         |
+| Variable                              | Description                                                                                                                                                                    | Example                                 |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- |
+| `POSTGRES_USER` / `POSTGRES_DB`       | Postgres role and database name.                                                                                                                                               | `evenly` / `evenly`                     |
+| `POSTGRES_PASSWORD`                   | Postgres password. **Required in prod** — compose refuses to start without it.                                                                                                 | `<long-random>`                         |
+| `DATABASE_URL`                        | Full connection string. In Docker it is built from the `POSTGRES_*` values for you.                                                                                            | `postgresql://evenly:…@db:5432/evenly`  |
+| `APP_URL` / `NEXT_PUBLIC_APP_URL`     | Public base URL — used to build links in emails. **Required in prod.**                                                                                                         | `https://evenly.example.com`            |
+| `APP_PORT`                            | Host port the app is published on (prod binds it to `127.0.0.1`).                                                                                                              | `3000`                                  |
+| `AUTH_SECRET`                         | Session/CSRF signing secret. **Set a long random value** (`openssl rand -hex 32`).                                                                                             | `<64 hex chars>`                        |
+| `REGISTRATION_ENABLED`                | Self sign-up. `false` (default): invite-only — accounts only via group invitations; the first account on an empty instance can always be created. `true`: anyone may register. | `false`                                 |
+| `SMTP_HOST` / `SMTP_PORT`             | SMTP server for outgoing email — empty = email features off.                                                                                                                   | `smtp.resend.com` / `587`               |
+| `SMTP_USER` / `SMTP_PASS`             | SMTP credentials.                                                                                                                                                              | `resend` / `re_…`                       |
+| `SMTP_SECURE`                         | `true` only for implicit TLS on connect (port 465).                                                                                                                            | `false`                                 |
+| `EMAIL_FROM`                          | From header for outgoing mail.                                                                                                                                                 | `Evenly <no-reply@example.com>`         |
+| `EXCHANGE_RATE_API_URL` / `…_API_KEY` | FX provider (auto-refreshed daily). Defaults to ExchangeRate-API's free open endpoint; `off` disables external calls (bundled rates only).                                     | `https://open.er-api.com/v6/latest/USD` |
+| `UPLOAD_DIR`                          | Where receipts/avatars are stored (a writable volume).                                                                                                                         | `/app/uploads`                          |
 
 ---
 
@@ -515,7 +522,8 @@ cp .env.example .env
 docker compose up -d            # app :3000, Postgres :5432
 ```
 
-- **App** → http://localhost:3000 (create an account via the register page)
+- **App** → http://localhost:3000 (the first visitor creates the first account; after that,
+  sign-up is invite-only unless `REGISTRATION_ENABLED=true`)
 - **Email** → set `SMTP_*` in `.env` to enable invites / magic-link / verification / reset /
   reminders. Without SMTP those features are simply disabled (the rest of the app works fully).
 
@@ -539,12 +547,17 @@ pnpm dev                                 # hot-reload dev server on http://local
 ```bash
 pnpm test            # Vitest unit tests: money/split/debt engine, currency
                      # (incl. a property test reconciling pairwise debts with net balances)
-pnpm test:e2e        # Playwright happy-path E2E (needs the app + DB running, e.g. docker compose up)
+pnpm test:e2e        # Playwright happy-path E2E — see the note below on registration
 ```
 
-For E2E, point Playwright at the running app:
+The happy-path spec registers a throwaway user, so the app under test **must run with
+`REGISTRATION_ENABLED=true`** (the default `false` shows the invite-only screen and the spec fails
+after the first run). If you let Playwright start the server (the default), it launches `pnpm dev`
+with that override applied automatically. If you point it at an **already-running** app instead,
+that override does **not** reach it — start that app yourself with the flag on, e.g.:
 
 ```bash
+REGISTRATION_ENABLED=true docker compose up -d      # app the test will reuse
 E2E_NO_SERVER=1 E2E_BASE_URL=http://localhost:3000 pnpm test:e2e
 ```
 

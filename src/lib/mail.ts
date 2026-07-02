@@ -38,7 +38,7 @@ export async function sendMail({ to, subject, html, text }: SendMailInput): Prom
 // ---------------------------------------------------------------------------
 
 /** Escape a value for interpolation into HTML text or attribute context. */
-function escapeHtml(value: string): string {
+export function escapeHtml(value: string): string {
   return value
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -88,7 +88,10 @@ function layout({ heading, intro, body, ctaLabel, ctaUrl, footnote, footer }: La
 </body></html>`;
 }
 
-function stripHtml(html: string): string {
+// Entity decode order matters: `&amp;` must be decoded LAST — it is the exact
+// inverse of escapeHtml, which encodes `&` first. Decoding `&amp;` first would
+// double-decode text that literally contained an entity (e.g. "&lt;" -> "<").
+export function stripHtml(html: string): string {
   return html
     .replace(/<a [^>]*href="([^"]+)"[^>]*>([^<]*)<\/a>/gi, '$2 ($1)')
     .replace(/<[^>]+>/g, '')

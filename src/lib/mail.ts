@@ -92,9 +92,16 @@ function layout({ heading, intro, body, ctaLabel, ctaUrl, footnote, footer }: La
 // inverse of escapeHtml, which encodes `&` first. Decoding `&amp;` first would
 // double-decode text that literally contained an entity (e.g. "&lt;" -> "<").
 export function stripHtml(html: string): string {
-  return html
-    .replace(/<a [^>]*href="([^"]+)"[^>]*>([^<]*)<\/a>/gi, '$2 ($1)')
-    .replace(/<[^>]+>/g, '')
+  let text = html.replace(/<a [^>]*href="([^"]+)"[^>]*>([^<]*)<\/a>/gi, '$2 ($1)');
+  // Strip tags repeatedly until stable, so a crafted overlap like "<<a>a>"
+  // cannot reintroduce a tag after a single pass. (Our own templates never
+  // contain such input, but this keeps the pass complete regardless.)
+  let previous: string;
+  do {
+    previous = text;
+    text = text.replace(/<[^>]+>/g, '');
+  } while (text !== previous);
+  return text
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')

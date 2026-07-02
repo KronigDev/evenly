@@ -26,6 +26,7 @@ handlers, 19 pages.
 10. [Continuous Integration](#continuous-integration)
 11. [Local Development](#local-development)
 12. [Testing](#testing)
+13. [License](#license)
 
 ---
 
@@ -41,14 +42,11 @@ own PostgreSQL — no external database is required.
 
 **Run it**
 
-This is a **private repo**, so `git clone` will ask for credentials: enter your GitHub **username**
-and a **Personal Access Token** as the _password_ (GitHub → _Settings → Developer settings → Personal
-access tokens_; _fine-grained_ with **Contents: Read** on this repo, or _classic_ with the `repo`
-scope).
+Evenly is open source ([MIT](LICENSE)), so the repository is public — no credentials are needed to
+clone it.
 
 ```bash
 # 1) Install git and clone the repo into the app directory
-#    (git prompts: username + token-as-password)
 sudo apt-get update && sudo apt-get install -y git
 sudo mkdir -p /opt/evenly && sudo chown "$USER" /opt/evenly
 git clone https://github.com/KronigDev/evenly.git /opt/evenly
@@ -560,6 +558,13 @@ that override does **not** reach it — start that app yourself with the flag on
 REGISTRATION_ENABLED=true docker compose up -d      # app the test will reuse
 E2E_NO_SERVER=1 E2E_BASE_URL=http://localhost:3000 pnpm test:e2e
 ```
+
+---
+
+## License
+
+Evenly is released under the [MIT License](LICENSE) — you are free to use, modify, self-host and
+redistribute it, including commercially, provided the copyright notice is retained.
 
 ---
 

@@ -30,4 +30,16 @@ describe('stripHtml', () => {
     const html = '<p>Hello <a href="https://example.com/x?a=1&amp;b=2">click here</a> now</p>';
     expect(stripHtml(html)).toBe('Hello click here (https://example.com/x?a=1&b=2) now');
   });
+
+  it('leaves no HTML tag in the output, even for overlapping/crafted input', () => {
+    const tricky = [
+      'a<<b>b>c',
+      '<<script>x</script>>',
+      '<img src=x onerror=alert(1)>',
+      '<<a href="x">y</a>>',
+    ];
+    for (const input of tricky) {
+      expect(stripHtml(input)).not.toMatch(/<[^>]+>/);
+    }
+  });
 });

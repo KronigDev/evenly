@@ -8,6 +8,10 @@ on:
   pull_request:
     branches: [main, dev]
 
+# Least privilege: this workflow only reads the repo contents.
+permissions:
+  contents: read
+
 jobs:
   verify:
     runs-on: ubuntu-latest

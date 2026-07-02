@@ -13,6 +13,10 @@ concurrency:
   group: evenly-deploy
   cancel-in-progress: false
 
+# The self-hosted runner works on a local clone and does not use GITHUB_TOKEN.
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: [self-hosted, deploy]
